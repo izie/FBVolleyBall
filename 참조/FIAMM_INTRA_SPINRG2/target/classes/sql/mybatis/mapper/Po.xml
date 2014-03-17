@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izect.fiamm.mapper.PoMapper">
+	<select id="getTotal1" parameterType="map" resultType="int">
+		SELECT COUNT(seq) FROM po WHERE seq != 0
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(priceKinds)">
+			AND priceKinds=#{priceKinds}
+		</if>
+	</select>
+
+	<select id="getTotal2" parameterType="map" resultType="int">
+		SELECT COUNT(seq) FROM po WHERE seq != 0
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(priceKinds)">
+			AND priceKinds=#{priceKinds}
+		</if>
+
+		<if test="sStDate>0">
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+
+		<if test="sEdDate">
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		<if test='@Ognl@isNotEmpty(poKind) and !poKind.equals("")'>
+			AND poKind = #{poKind}
+		</if>
+	</select>
+
+	<select id="getTotal3" parameterType="map" resultType="int">
+		<choose>
+			<when test='sStDate > 0 and sEdDate > 0 and @Ognl@isNotEmpty(schKinds) and !schKinds.equals("wDate")'>
+				SELECT COUNT(DISTINCT(p.seq)) FROM po p LEFT OUTER JOIN passitemlnk s ON
+				p.seq=s.seq_po WHERE p.eff != 0
+			</when>
+			<otherwise>
+				SELECT COUNT(p.seq) FROM po p WHERE p.eff != 0
+			</otherwise>
+		</choose>
+
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+			AND priceKinds=#{priceKinds}
+		</if>
+
+		<if test="sStDate>0">
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+
+		<if test="sEdDate>0">
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+	</select>
+
+	<select id="getSum1" parameterType="map" resultType="double">
+		<choose>
+			<when
+				test='sStDate > 0 and sEdDate > 0 and @Ognl@isNotEmpty(schKinds) and !schKinds.equals("wDate")'>
+				SELECT p.priceKinds,SUM(p.poTotPrice) as price FROM po p LEFT OUTER JOIN
+				passitemlnk s
+				ON p.seq=s.seq_po WHERE p.eff = 1
+			</when>
+			<otherwise>
+				SELECT p.priceKinds,SUM(p.poTotPrice) FROM po p WHERE p.eff = 1
+			</otherwise>
+		</choose>
+		SELECT SUM(poTotPrice) FROM po WHERE seq != 0
+
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test='@Ognl@isNotEmpty(priceKinds)'>
+			AND priceKinds=#{priceKinds}
+		</if>
+
+	</select>
+
+	<select id="getSum2" parameterType="map" resultType="PoSum">
+		SELECT SUM(poTotPrice) FROM po WHERE seq != 0
+
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+			AND priceKinds=#{priceKinds}
+		</if>
+
+		<if test="sStDate>0">
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+
+		<if test="sEdDate>0">
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		GROUP BY p.priceKinds
+
+	</select>
+
+	<insert id="insert" parameterType="Client">
+		INSERT INTO po(seq,seq_client,seq_clientUser,userId,poUserId
+		,title,priceKinds,priceVal,isTax,taxPrice
+		,poTotPrice,poDate,wDate,endUser,timeDeli
+		,termDeli,termDeliMemo,termPay,termPayMemo,packing
+		,remarks,fileName,poYear, poNum, poCnt
+		,poNumIncre,language,source,poKind)
+		VALUES(
+		seq,seq_client,seq_clientUser,userId,poUserId
+		,title,priceKinds,priceVal,isTax,taxPrice
+		,poTotPrice,poDate,wDate,endUser,timeDeli
+		,termDeli,termDeliMemo,termPay,termPayMemo,packing
+		,remarks,fileName,poYear, poNum, poCnt
+		,poNumIncre,language,'2',poKind)
+	</insert>
+
+	<select id="getList1" parameterType="map" resultType="Po">
+		SELECT * FROM po WHERE seq != 0
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(priceKinds)">
+			AND priceKinds=#{priceKinds}
+		</if>
+		
+		 ORDER BY poYear DESC,poNum DESC,poCnt DESC,poNumIncre DESC LIMIT ${start},${pageSize}
+	</select>
+	
+	<select id="getList2" parameterType="map" resultType="Po">
+		SELECT * FROM po WHERE seq != 0
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(priceKinds)">
+			AND priceKinds=#{priceKinds}
+		</if>
+
+		<if test="sStDate>0">
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+
+		<if test="sEdDate > 0">
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		<if test='@Ognl@isNotEmpty(poKind) and !poKind.equals("")'>
+			AND poKind = #{poKind}
+		</if>
+		
+		 ORDER BY poYear DESC,poNum DESC,poCnt DESC,poNumIncre DESC LIMIT ${start},${pageSize}
+	</select>
+	
+	<select id="getList3" parameterType="map" resultType="Po">
+		 SELECT DISTINCT(p.seq) AS dseq,p.* FROM  po p,link l
+			WHERE p.seq = l.seq_po AND l.seq_project=#{seq_project} 
+			ORDER BY p.poYear DESC,p.poNum DESC,p.poCnt DESC,p.poNumIncre DESC 
+	</select>
+	
+	<select id="getList4" parameterType="map" resultType="Po">
+		<choose>
+			<when test='sStDate > 0 and sEdDate > 0 and @Ognl@isNotEmpty(schKinds) and !schKinds.equals("wDate")'>
+				 SELECT DISTINCT(p.seq) AS temp,p.* FROM po p LEFT OUTER JOIN passitemlnk s 
+				  ON p.seq=s.seq_po WHERE p.eff != 0 
+			</when>
+			<otherwise>
+				 SELECT p.* FROM po p WHERE p.eff != 0 
+			</otherwise>
+		</choose>
+
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+			AND priceKinds=#{priceKinds}
+		</if>
+
+		<if test="sStDate>0">
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+
+		<if test="sEdDate > 0">
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		
+	</select>
+	<select id="selectOne" parameterType="map" resultType="Po">
+		SELECT * FROM po WHERE seq=#{seq}
+	</select>
+	
+	<update id="calcMoney" parameterType="map">
+		 UPDATE po SET taxPrice=#{taxPrice},poTotPrice=#{poTotPrice} WHERE seq=#{seq_po}
+	</update>
+	
+	<update id="updatePo" parameterType="Po">
+		 UPDATE po SET taxPrice=#{taxPrice},poTotPrice=#{poTotPrice} WHERE seq=#{seq}
+	</update>
+	<update id="update1" parameterType="map">
+		UPDATE po SET eventMsg=#{eventMsg} WHERE seq=#{seq}
+	</update>
+	
+	<update id="update2" parameterType="map">
+		UPDATE po SET eventMsg=#{eventMsg} WHERE seq=#{seq}
+	</update>
+	
+	<delete id="delete" parameterType="map">
+	DELETE FROM po WHERE seq=#{seq}
+	</delete>
+	
+	<update id="update3" parameterType="map">
+		UPDATE po SET eff=#{eff},eventMsg=#{eventMsg} WHERE seq=#{seq}
+	</update>
+	
+	<select id="getList6" parameterType="map" resultType="Entity">
+	SELECT A.* FROM  po A LEFT OUTER JOIN link B
+			 ON A.seq = B.seq_po 
+			 WHERE A.seq != 0
+		<if test="seq_contract > 0">
+			AND B.seq_contract=#{seq_contract}
+		</if>
+		
+		<if test="sStDate > 0">
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+
+		<if test="sEdDate > 0">
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if> 
+		
+	</select>
+	
+	<update id="updateFile" parameterType="map">
+		UPDATE po SET fileName=#{fileName} WHERE seq=#{seq}
+	</update>
+</mapper>

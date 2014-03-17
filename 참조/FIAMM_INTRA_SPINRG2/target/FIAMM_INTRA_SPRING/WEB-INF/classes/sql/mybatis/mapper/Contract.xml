@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.ContractMapper"> 
+ 
+ <insert id="insert" parameterType="Contract">
+	INSERT INTO contract( 
+		seq_client,		
+		seq_clientUser,		
+		seq_project,		
+		seq_estimate,		
+		userId,		
+		inUserId,		
+		conDate,		
+		wDate,		
+		conTotPrice,		
+		priceKinds,		
+		place,		
+		deliDate,		
+		demandDate,		
+		warrant,		
+		title,		
+		memo,		
+		fileName,		
+		contractNum,		
+		isTax,		
+		supPrice,		
+		taxPrice,		
+		payMethod,		
+		payMethod1,		
+		payMethod2,		
+		payMethod3,		
+		prepayDeed,		
+		prepayPer,		
+		prepayStDate,		
+		prepayEdDate,		
+		prepayContent,		
+		conDeed,		
+		conPer,		
+		conStDate,		
+		conEdDate,		
+		conContent,		
+		defectDeed,		
+		defectPer,		
+		defectStDate,		
+		defectEdDate,		
+		defectContent,		
+		etcDeed,		
+		etcPer,		
+		etcStDate,		
+		etcEdDate,		
+		etcContent,		
+		delayDeed,		
+		delayPer,		
+		delayContent,		
+		coYear,		
+		coNum,		
+		seq
+		) VALUES(
+		#{seq_client},    	
+		#{seq_clientUser},	
+		#{seq_project},   	
+		#{seq_estimate},  	
+		#{userId},        	
+		#{inUserId},      	
+		#{conDate},       	
+		#{wDate},         	
+		#{conTotPrice},   	
+		#{priceKinds},    	
+		#{place},         		
+		#{deliDate},      	
+		#{demandDate},    	
+		#{warrant},       	
+		#{title},         	
+		#{memo},          	
+		#{fileName},      	
+	    	
+		#{contractNum},   	
+		#{isTax},         		
+		#{supPrice},      	
+		#{taxPrice},      	
+		#{payMethod},     	
+		#{payMethod1},    	
+		#{payMethod2},    	
+		#{payMethod3},    	
+		                  	
+		#{prepayDeed},    	
+		#{prepayPer},     	
+		#{prepayStDate},  	
+		#{prepayEdDate},  		
+		#{prepayContent}, 	
+		                  	
+		#{conDeed},       	
+		#{conPer},        	
+		#{conStDate},     	
+		#{conEdDate},     	
+		#{conContent},    	
+		                  	
+		#{defectDeed},    	
+		#{defectPer},     		
+		#{defectStDate},  	
+		#{defectEdDate},  	
+		#{defectContent}, 	
+		                  	
+		#{etcDeed},       	
+		#{etcPer},        	
+		#{etcStDate},     	
+		#{etcEdDate},     	
+		#{etcContent},    		
+		                  
+		#{delayDeed},     
+		#{delayPer},      
+		#{delayContent},  
+		#{coYear},        
+		#{coNum},         
+	                  
+		#{seq}
+	)         
+ </insert>
+ 
+ <select id="getTotal" parameterType="map" resultType="int">
+ 	 SELECT COUNT(seq) FROM contract WHERE seq != 0
+ 	 <if test='seq_client > 0'>
+ 	 	 AND seq_client=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		 AND ${sk} LIKE ('%', #{st}, '%') 
+	</if>	
+ </select>
+ 
+ <select id="getTotal2" parameterType="map" resultType="int">
+ 	 SELECT COUNT(seq) FROM contract WHERE seq != 0
+ 	 <if test='@Ognl@isNotEmpty(seq_client) and !seq_client.equals("0")'>
+ 	 	 AND seq_client=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		 AND ${sk} LIKE ('%', #{st}, '%') 
+	</if>
+	<if test='sStDate > 0'>
+		  AND ${schKinds} <![CDATA[>=]]> #{sStDate} 
+	</if>
+	
+	<if test='sEdDate > 0'>
+		  AND ${schKinds} <![CDATA[<=]]> #{sEdDate} 
+	</if>
+	
+	<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+		   AND priceKinds=#{priceKinds} 
+	</if>			
+				
+ </select>
+ 
+ <select id="getSum" parameterType="map" resultType="PoSum">
+ 	  SELECT SUM(supPrice) as price,priceKinds FROM contract WHERE seq != 0 
+	<if test='seq_client > 0'>
+ 	 	 AND seq_client=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		 AND ${sk} LIKE ('%', #{st}, '%') 
+	</if>
+	<if test='sStDate > 0'>
+		  AND ${schKinds} >= #{sStDate} 
+	</if>
+	
+	<if test='sEdDate > 0'>
+		  AND ${schKinds} >= #{sEdDate} 
+	</if>
+	
+	<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+		   AND priceKinds=#{priceKinds} 
+	</if>
+	 GROUP BY priceKinds 
+ </select>
+ 
+ <select id="getList" parameterType="map" resultType="Contract">
+ 	 SELECT * FROM contract WHERE seq != 0
+ 	 <if test='seq_client > 0'>
+ 	 	 AND seq_client=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		 AND ${sk} LIKE ('%', #{st}, '%') 
+	</if>	
+	ORDER BY seq DESC LIMIT ${start},${pageSize}	
+ </select>
+ 
+ 
+ 
+ <select id="getList2" parameterType="map" resultType="Contract">
+ 	 SELECT * FROM contract WHERE seq != 0
+ 	 <if test='seq_client > 0'>
+ 	 	 AND seq_client=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		 AND ${sk} LIKE ('%', #{st}, '%') 
+	</if>
+	
+	<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+		   AND priceKinds=#{priceKinds} 
+	</if>
+	ORDER BY ${oby} DESC LIMIT ${start},${pageSize}	
+	 				
+ </select>
+ 
+ 
+ <select id="getList3" parameterType="map" resultType="Contract">
+ 	 SELECT * FROM contract WHERE seq != 0
+ 	 <if test='seq_client > 0'>
+ 	 	 AND seq_client=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		 AND ${sk} LIKE ('%', #{st}, '%') 
+	</if>
+	<if test='sStDate > 0'>
+		  AND ${schKinds} <![CDATA[>=]]> #{sStDate} 
+	</if>
+	
+	<if test='sEdDate > 0'>
+		  AND ${schKinds} <![CDATA[<=]]> #{sEdDate} 
+	</if>
+	
+	<if test='@Ognl@isNotEmpty(priceKinds) and !priceKinds.equals("ALL")'>
+		   AND priceKinds=#{priceKinds} 
+	</if>
+	ORDER BY ${oby} DESC LIMIT ${start},${pageSize}		
+	 				
+ </select>
+ 
+  <select id="selectOne" parameterType="int" resultType="Contract">
+ 	SELECT * FROM contract WHERE seq=#{seq}
+ </select>
+ 
+ 
+ <update id="update" parameterType="Contract">
+ 	UPDATE 
+	contract 
+	SET     
+		seq_clientUser=#{seq_clientUser},
+		inUserId=#{inUserId},      
+		conDate=#{conDate},       
+		wDate=#{wDate},         
+		conTotPrice=#{conTotPrice},   
+		place=#{place},         
+		deliDate=#{deliDate},      
+		demandDate=#{demandDate},    
+		warrant=#{warrant},       
+		title=#{title},         
+		memo=#{memo},          
+		priceKinds=#{priceKinds},    
+		contractNum=#{contractNum},   
+		isTax=#{isTax},         
+		supPrice=#{supPrice},      
+		taxPrice=#{taxPrice},      
+		payMethod=#{payMethod},     
+		payMethod1=#{payMethod1},    
+		payMethod2=#{payMethod2},    
+		payMethod3=#{payMethod3},    
+		prepayDeed=#{prepayDeed},    
+		prepayPer=#{prepayPer},     
+		prepayStDate=#{prepayStDate},  
+		prepayEdDate=#{prepayEdDate},  
+		prepayContent=#{prepayContent}, 
+		conDeed=#{conDeed},       
+		conPer=#{conPer},        
+		conStDate=#{conStDate},     
+		conEdDate=#{conEdDate},     
+		conContent=#{conContent},    
+		defectDeed=#{defectDeed},    
+		defectPer=#{defectPer},     
+		defectStDate=#{defectStDate},  
+		defectEdDate=#{defectEdDate},  
+		defectContent=#{defectContent}, 
+		etcDeed=#{etcDeed},       
+		etcPer=#{etcPer},        
+		etcStDate=#{etcStDate},     
+		etcEdDate=#{etcEdDate},     
+		etcContent=#{etcContent},    
+		delayDeed=#{delayDeed},     
+		delayPer=#{delayPer},      
+		delayContent=#{delayContent},  
+		seq_estimate=#{seq_estimate}   
+		<if test='@Ognl@isNotEmpty(fileName)'>
+			,fileName=#{fileName}
+		</if>
+ 	 WHERE 
+ 	 	seq=#{seq}
+ </update>
+ 
+ <delete id="delete" parameterType="int">
+ 	DELETE FROM contract WHERE seq=#{seq}
+ </delete>
+ 
+  <select id="getList4" parameterType="map" resultType="Contract">
+	   SELECT * FROM contract WHERE seq_client=#{seq_client} ORDER BY coYear DESC, coNum DESC 
+ </select>
+ 
+ <select id="getListInProject" parameterType="map" resultType="Contract">
+	    SELECT * FROM contract WHERE seq_project=#{seq_project}  ORDER BY coYear DESC,coNum DESC 
+ </select>
+ 
+  <select id="getListInPo" parameterType="map" resultType="Contract">
+	   SELECT 
+			c.* 			 
+	   FROM 
+	   		po p, 
+	   		link l, 
+	   		contract c						 
+	   WHERE 
+	   		p.seq = l.seq_po										
+	   		and l.seq_contract = c.seq							
+	   		and p.seq=#{seq_po}
+ </select>
+ 
+ <select id="getListInProjectCnt" parameterType="map" resultType="int">
+	   SELECT COUNT(seq) FROM contract WHERE seq_project=#{seq_project} ORDER BY seq DESC 
+ </select>
+ 
+ <select id="getListEstSeq" parameterType="map" resultType="Contract">
+	   SELECT * FROM contract WHERE seq_project=#{seq_project} ORDER BY seq DESC  
+ </select>
+ 
+ <select id="getListOne" parameterType="map" resultType="Contract">
+	    SELECT * FROM contract WHERE seq_project=#{seq_project} ORDER BY seq DESC   
+ </select>
+ 
+ <select id="getListInEstimate" parameterType="map" resultType="Contract">
+	    SELECT * FROM contract WHERE seq_estimate=#{seq_estimate} 
+ </select>
+ 
+  <select id="getCntInEstimate" parameterType="map" resultType="Contract">
+	    SELECT COUNT(seq) FROM contract WHERE seq_estimate=#{seq_estimate} 
+ </select>
+ <update id="updateFile" parameterType="map">
+ 	UPDATE contract SET fileName=#{fileName} WHERE seq=#{seq}
+ </update>
+ 
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+    <bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>classpath:config/fiamm-config.properties</value>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass"        value="${jdbc.driverClass}" />
+        <property name="url"                value="${jdbc.url}" />
+        <property name="username"           value="${jdbc.username}" />
+        <property name="password"           value="${jdbc.password}" />
+    </bean>
+<!-- http://groups.google.com/group/ksug/browse_thread/thread/766cd1fd8ba39c96 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="configLocation" value="classpath:config/mybatis/config.xml"/>
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath*:sql/mybatis/mapper/**/*.xml" />
+        <property name="typeAliasesPackage" value="com.izect.fiamm.domain" />
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="transactionTemplate"
+        class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager" />
+    </bean>
+
+	<bean id="CommonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.CommonMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="UserInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.UserInfoMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="ProjectMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.ProjectMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="ClientUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.ClientUserMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="ClientMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.ClientMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="ContractMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.ContractMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="ContractNoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.ContractNoMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="LinkMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.LinkMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="AlertMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.AlertMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="PoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.PoMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="MngNoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.MngNoMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="PassItemLinkMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.PassItemLnkMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="SetupItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.SetupItemMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="PoItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.PoItemMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="LcMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.LcMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="TtMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.TtMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="TT_paymentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.TT_paymentMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+    
+    <bean id="PassMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.izect.fiamm.mapper.PassMapper"/>
+  		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+</beans>

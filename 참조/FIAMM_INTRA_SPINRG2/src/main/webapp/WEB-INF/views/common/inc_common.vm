@@ -1,0 +1,24 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : inc_common.jsp
+  -- PGM 내용 : 사이트 공통사항 처리
+  -- ---------- ---------------------------------------------------------
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+##Web Application의 Context Root 정보
+#set ($ctx = $springMacroRequestContext.getContextPath())
+#set ($rctx = $springMacroRequestContext.getContextPath() + "/resources") 
+
+##현재 페이지 정보
+#set($nPage     = "$!request.getRequestURI()?$!request.getQueryString()" )
+#set($cmd       = $!request.getParameter("cmd") )
+
+
+##목록성 화면 구성을 위한 설정
+#set( $totalNo       = $v.getInt("totalNo") )
+#set( $countPerPage  = $v.getInt("countPerPage") )
+#set( $pageNo        = $v.getInt("pageNo") )
+#set( $brdNo         = $v.getInt("brdNo") )
+
+
+##세션(쿠키) 유무 체크
+##parse("/common/inc_session_check.vm")

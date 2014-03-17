@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.MngNoMapper"> 
+ <select id="selectList" parameterType="map" resultType="PoNo">
+ 	SELECT * FROM po WHERE poYear=#{poYear} ORDER BY poNum DESC LIMIT 0,1
+ </select>
+ 
+ <select id="selectOne1" parameterType="map" resultType="PoNo">
+ 	  SELECT * FROM po WHERE poYear=#{poYear} AND poNum=#{poNum} LIMIT 0,1
+ </select>
+ 
+ <select id="selectOne2" parameterType="map" resultType="int">
+ 	 SELECT MAX(poNumIncre) as maxPoNumIncre FROM po WHERE poYear=#{poYear} AND poNum=#{poNum} AND poCnt=#{poCnt}
+ </select>
+ 
+ <select id="selectOne3" parameterType="map" resultType="int">
+ 	  SELECT MAX(poCnt) as maxPoCnt FROM po WHERE poYear=#{poYear} AND poNum=#{poNum}
+ </select>
+ 
+ <update id="updateEff" parameterType="map">
+ 	 UPDATE  
+ 	 	po 
+ 	 SET 
+ 	 	eff=0 
+ 	 WHERE 
+ 	 	poYear=#{poYear} AND poNum=#{poNum} AND poCnt=#{poCnt}
+ </update>
+ 
+ <update id="updatePoCnt" parameterType="map">
+ 	 UPDATE  
+ 	 	po 
+ 	 SET 
+ 	 	poCnt=1
+ 	 WHERE 
+ 	 	poYear=#{poYear} AND poNum=#{poNum} AND poCnt=#{poCnt}
+ </update>
+ 
+</mapper>

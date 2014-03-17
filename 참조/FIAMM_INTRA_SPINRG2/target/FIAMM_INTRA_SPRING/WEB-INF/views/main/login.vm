@@ -1,0 +1,76 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : main.vm
+  -- PGM 내용 : 메인 로그인 화면
+  -- 개발자  
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+## 필수 설정 인클루드
+#parse("/common/inc_common.vm")
+
+## 로그인 했을 경우 세션정보 저장
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='$!{rctx}/css/common.css' rel='stylesheet' type='text/css'>
+<title>FIAMM  KOREA INTRANET</title>
+
+## 개발  js/css 인클루드
+#parse("/common/inc_js.vm")
+
+## 페이지 jquery 인클루드
+<script type="text/javascript" src="${rctx}/js/main/login.js"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="$!{rctx}/css/iTMSstyle2.0.css" />
+	<link rel="stylesheet" type="text/css" href="$!{rctx}/css/groupware2.css" />
+	
+</head>
+<body class="indexbg">
+<form name="loginForm" id="loginForm" method="post">
+<input type="hidden" id="outLogin_yn" name="outLogin_yn" value="$!{useSms}" />
+<div class="indexWrap">
+	<!-- login -->
+	<div class="loginbox">
+		<h3 style="padding-left:100px;"><img src="$!{rctx}/images/img_logintit.gif" alt="login groupware system" /></h3>
+				<ul class="loginwrap">
+					<li class="in01"><img src="$!{rctx}/images/ico_indexlogin.gif" alt="" /></li>
+					<li class="in02">
+						<div>아이디&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="text" notnull='true' fieldName='아이디' size="15" maxlength="20" id="userId" name="userId" value="" style="width:60px;" /></div>
+						<div class="mgt5">비밀번호&nbsp;<input type="password" id="passwd" class="password" notnull='true' fieldName='비밀번호' value="" style="width:60px;" name="passwd" size="20" maxlength="20" onkeypress="auto_uf_login();" /></div>
+						#if($useSms == "Y")
+						<div class="mgt5">인증키&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" id="smsKey" class="password" notnull='true' fieldName='인증키' value="" style="width:60px;" name="smsKey" size="20" maxlength="20" onkeypress="auto_uf_login();" /></div>
+						#else
+						<input type="hidden" id="smsKey" class="password" notnull='true' fieldName='인증키' value="" style="width:60px;" name="smsKey" size="20" maxlength="20" onkeypress="auto_uf_login();" />
+					  	#end
+						<div id="pwInitLayer"></div>
+						<div style="margin-top:3px;"><input type="checkbox" id="idcheck" name="idcheck" class="checkbox" /> <label style="vertical-align:middle;"><img src="$!{rctx}/images/tit_idsave.gif" alt="아이디 저장" /></label></div>
+					</li>
+					<li class="in03"><a href="#" ><img src="$!{rctx}/images/btn_login.gif" id="btnLogin" alt="로그인" /></a></li>
+				</ul>
+		<div class="loginline">			
+			<p class="adminTxt">관리자: 장익환(matthew.chang@me.com)</p>
+			<p class="adminTxt">인가된 사용자 이외에는 접속을 금합니다.</p>
+		</div>
+	</div>
+	<!-- //login -->
+	<div class="footer">
+		<div style="float:left;margin-right:40px;">
+			<img src="$!{rctx}/images/logo_footer.gif" alt="Webcash" title="" onclick="javascript:window.open('http://www.fiammkorea.co.kr','_blank')" style="cursor:hand"/>
+		</div>
+		<div style="float:left;padding-top:5px;">
+			<address style="font-style:normal;color:#666666;">서울시 구로구 구로동 851 한화비즈메트로 1차 815호 피암코리아 주식회사 대표전화: 02-837-1970
+			<br/>
+			Copyright (c) 2012 FIAMM KOREA CO, LTD.  All rights reserved.
+			<br /><br />
+			본 사이트는 Internet Explorer 7 이상에 최적화 되어 있습니다. 
+			</address>
+<!--		<img src="/proto/web/img/groupware/img_index_footer.gif" alt="Copyright (c) 2009 Webcash Corp.  All rights reserved." title="" />-->
+		</div>
+	</div>
+</div>
+</form>
+</body>
+</html>

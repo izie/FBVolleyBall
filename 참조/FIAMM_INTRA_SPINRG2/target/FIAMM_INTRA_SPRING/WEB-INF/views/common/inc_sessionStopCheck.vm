@@ -1,0 +1,5 @@
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+#if($sessionObj.getStopFlag() == 1)
+	$sessionObj.setStopFlag(0)
+	$session.setAttribute("FIAMM_SESSION_USER", $sessionObj);
+#end

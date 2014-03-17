@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.ClientMapper"> 
+ <select id="getTotal" parameterType="map" resultType="int">
+ 	 SELECT COUNT(seq) FROM client WHERE seq != 0 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("bizname")'>
+				AND ( bizName LIKE ('%', #{st}, '%')  OR engBizName LIKE ('%', #{st}, '%'))	
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+	</if>
+ </select>
+ 
+ <select id="getList" parameterType="map" resultType="Client">
+ 	 SELECT * FROM  client WHERE seq != 0 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("bizname")'>
+				AND ( bizName LIKE ('%', #{st}, '%')  OR engBizName LIKE ('%', #{st}, '%'))	
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+	</if>
+	 ORDER BY bizName LIMIT ${start},${pageSize}
+ </select>
+ 
+ <select id="getTotal2" parameterType="map" resultType="int">
+ 	 SELECT COUNT(seq) FROM client WHERE seq != 0 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("bizname")'>
+				AND ( bizName LIKE ('%', #{st}, '%')  OR engBizName LIKE ('%', #{st}, '%'))	
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+		<if test='@Ognl@isNotEmpty(bizkinds)'>
+			 AND ( bizKinds='매입,매출' OR bizKinds=#{bizKinds}) 
+		</if>
+	</if>
+ </select>
+ 
+ <select id="getList2" parameterType="map" resultType="Client">
+ 	 SELECT * FROM  client WHERE seq != 0 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("bizname")'>
+				AND ( bizName LIKE ('%', #{st}, '%')  OR engBizName LIKE ('%', #{st}, '%'))	
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+		<if test='@Ognl@isNotEmpty(bizkinds)'>
+			 AND ( bizKinds='매입,매출' OR bizKinds=#{bizKinds}) 
+		</if>
+	</if>
+	 ORDER BY bizName LIMIT ${start},${pageSize}
+ </select>
+ 
+  <select id="getListOby" parameterType="map" resultType="Client">
+ 	 SELECT * FROM  client WHERE seq != 0
+ 	 <if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("bizname")'>
+				AND ( bizName LIKE ('%', #{st}, '%')  OR engBizName LIKE ('%', #{st}, '%'))	
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+	</if>
+	 ORDER BY ${oby} LIMIT ${start},${pageSize}
+ </select>
+ 
+ <select id="getListOby2" parameterType="map" resultType="Client">
+ 	 SELECT * FROM  client WHERE seq != 0
+ 	 <if test='seq_client != -1'>
+ 	 	AND seq=#{seq_client}
+ 	 </if> 
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("bizname")'>
+				AND ( bizName LIKE ('%', #{st}, '%')  OR engBizName LIKE ('%', #{st}, '%'))	
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+	</if>
+	 ORDER BY ${oby} LIMIT ${start},${pageSize}
+ </select>
+ 
+  <insert id="insert" parameterType="Client">
+	INSERT INTO client( 
+		bizName,
+		bizKinds,
+		postNum,
+		addr,
+		detailAddr,
+		tel,
+		fax,
+		grade,
+		bizNum,
+		bizCon,
+		bizItem,
+		bizAddr,
+		chiefName,
+		etc,
+		addrPic,
+		engBizName,
+		seq 
+	) VALUES (
+		#{bizName},
+		#{bizKinds},
+		#{postNum},
+		#{addr},
+		#{detailAddr},
+		#{tel},
+		#{fax},
+		#{grade},
+		#{bizNum},
+		#{bizCon},
+		#{bizItem},
+		#{bizAddr},
+		#{chiefName},
+		#{etc},
+		#{addrPic},
+		#{engBizName},
+		#{seq}
+	)
+ </insert>
+ <select id="selectOne" parameterType="map" resultType="Client">
+ 	SELECT * FROM client WHERE seq=#{seq}
+ </select>
+ <delete id="delete" parameterType="map">
+ 	DELETE FROM client WHERE seq=#{seq}
+ </delete>
+ 
+ <update id="update" parameterType="map">
+ 	 UPDATE 
+		client 
+	SET 
+		bizName=#{cl.cl.bizName},
+		bizKinds=#{cl.cl.bizKinds},
+		postNum=#{cl.cl.postNum},
+		addr=#{cl.cl.addr},
+		detailAddr=#{cl.detailAddr},
+		tel=#{cl.tel},
+		fax=#{cl.fax},
+		grade=#{cl.grade},
+		bizNum=#{cl.bizNum},
+		bizCon=#{cl.bizCon},
+		bizItem=#{cl.bizItem},
+		bizAddr=#{cl.bizAddr},
+		chiefName=#{cl.chiefName},
+		etc=#{cl.etc},
+		engBizName=#{cl.engBizName}
+		<if test='@Ognl@isNotEmpty(addrPic)'>
+			addrPic=#{addrPic}
+		</if>
+ 	 WHERE 
+ 	 	seq=#{cl.seq}
+ </update>
+ 
+  <select id="getClient" parameterType="map" resultType="Client">
+	  SELECT seq,bizName,engBizName FROM client
+	   ORDER BY bizName  
+ </select>
+ 
+ <select id="getClient2" parameterType="map" resultType="Client">
+	  SELECT seq,bizName,engBizName FROM client
+	  <if test="@Ognl@isNotEmpty(bizKinds)">
+	  	 WHERE bizKinds='매입,매출' OR bizKinds= #{bizKinds}
+	  </if>
+	   ORDER BY bizName  
+ </select>
+ 
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.ClientUserMapper"> 
+ <select id="getTotal" parameterType="map" resultType="int">
+ 	SELECT COUNT(seq) FROM clientuser WHERE seq_fk=#{seq}
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+ </select>
+ 
+ <select id="getList" parameterType="map" resultType="ClientUser">
+ 	SELECT * FROM clientuser WHERE seq_fk=#{seq}
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+	 ORDER BY userName LIMIT ${start},${pageSize}
+ </select>
+ 
+  <insert id="insert" parameterType="ClientUser">
+  	 INSERT INTO clientuser
+  	 (
+  	 	seq_fk,
+  	 	userName,
+  	 	classPosi,
+  	 	tel,
+  	 	hp,
+  	 	fax,
+  	 	email,
+  	 	etc,
+  	 	userId,
+  	 	part
+  	 ) VALUES (
+  	 	#{seq_fk},
+  	 	#{userName},
+  	 	#{classPosi},
+  	 	#{tel},
+  	 	#{hp},
+  	 	#{fax},
+  	 	#{email},
+  	 	#{etc},
+  	 	#{userId},
+  	 	#{part}
+  	 ) 
+ </insert>
+ <select id="selectOne" parameterType="map" resultType="ClientUser">
+ 	SELECT * FROM clientuser WHERE seq=#{seq}
+ </select>
+ <delete id="delete" parameterType="map">
+ 	DELETE FROM clientuser WHERE seq=#{seq}
+ </delete>
+ 
+ <update id="update" parameterType="ClientUser">
+ 	 UPDATE
+ 	 	clientuser 
+ 	 SET 
+ 	 	userName=#{userName},
+ 	 	classPosi=#{classPosi},
+ 	 	tel=#{tel},
+ 	 	hp=#{hp},
+ 	 	fax=#{fax},
+ 	 	email=#{email},
+ 	 	etc=#{etc},
+ 	 	userId=#{userId},
+ 	 	part=#{part} 
+ 	 WHERE 
+ 	 	seq=#{seq}
+ </update>
+ 
+  <select id="getClientUser" parameterType="map" resultType="ClientUser">
+	 SELECT seq,userName,classPosi FROM clientuser WHERE seq_fk=#{seq_fk} ORDER BY userName 
+ </select>
+ 
+ <select id="getList2" parameterType="map" resultType="ClientUser">
+	 SELECT seq,userName FROM clientuser WHERE seq IN (${seq_client})  
+ </select>
+</mapper>

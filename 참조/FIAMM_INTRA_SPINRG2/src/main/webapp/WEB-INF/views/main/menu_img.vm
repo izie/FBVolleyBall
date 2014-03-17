@@ -1,0 +1,428 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : main.vm
+  -- PGM 내용 : 메인 화면
+  -- 개발자  
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+## 필수 설정 인클루드
+#parse("/common/inc_common.vm")
+
+## 로그인 체크
+#parse("/common/inc_loginCheck.vm")
+
+## 로그인 했을 경우 세션정보 저장
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='$!{rctx}/css/common.css' rel='stylesheet' type='text/css'>
+<title>FIAMM  KOREA INTRANET</title>
+
+## 개발  js/css 인클루드
+#parse("/common/inc_js.vm")
+
+## 페이지 jquery 인클루드
+
+## 기타 js/css 로딩
+<SCRIPT language=JavaScript src="/resources/js/tree/menu.js"></SCRIPT>
+<style>
+.mnu_sub_01_bg {
+	background-image: url(/resources/images/bg_board02_3.gif);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	padding-left:15;
+	background-color:#ffffff;
+	cursor:hand;
+}
+.mnu_sub_01_bg_o {
+	background-image: url(/resources/images/bg_board02_3.gif);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	padding-left:15;
+	background-color:#B7CCDF;
+	color:#330066;
+	cursor:hand;
+}
+.mnu_sub_01_bg_c {
+	background-image: url(/resources/images/bg_board02_3.gif);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	padding-left:15;
+	background-color:#C46C33;
+	color:#ffffff;
+	cursor:hand;
+}
+</style>
+<SCRIPT LANGUAGE="JavaScript">
+function F5keydown(){
+	if(event.keyCode== 116) {
+	  window.event.keyCode = "";
+	  parent.parent.document.frames['MF'].location.reload();
+	  return false;
+	}
+}
+document.onkeydown=F5keydown;
+var oldObj = null;
+function mse( url ){
+	var obj = event.srcElement;
+	var etype = event.type;
+	obj.onclick		= new Function("mse( '"+url+"' )");
+	if( etype=='click' ){
+		if( oldObj != null ){
+			oldObj.className   = "mnu_sub_01_bg";
+			oldObj.onmouseover = new Function("this.className='mnu_sub_01_bg_o';");
+			oldObj.onmouseout  = new Function("this.className='mnu_sub_01_bg';");
+		}
+		obj.className = "mnu_sub_01_bg_c";
+		obj.onmouseover = new Function("this.className='mnu_sub_01_bg_c';");
+		obj.onmouseout  = new Function("this.className='mnu_sub_01_bg_c';");
+		oldObj = obj;
+		if( url != null && url != "" ){
+			
+			parent.parent.document.getElementById("MF").src=url;
+		}
+	}else if( etype == 'mouseover' ){
+		obj.className = "mnu_sub_01_bg_o";
+		obj.onmouseover = new Function("this.className='mnu_sub_01_bg_o';");
+		obj.onmouseout  = new Function("this.className='mnu_sub_01_bg';");
+	}else if( etype == 'mouseout' ){
+		obj.className = "mnu_sub_01_bg";
+		obj.onmouseover = new Function("this.className='mnu_sub_01_bg_o';");
+		obj.onmouseout  = new Function("this.className='mnu_sub_01_bg';");
+	}
+	
+}
+</SCRIPT>
+
+</HEAD>
+
+<BODY leftmargin="3" topmargin="3" bgcolor="#ffffff" onload="show1('w1','block');show1('w1p1','block');" class="xnoscroll">
+<table cellpadding="0" cellspacing="0" border="0" width="150" height="100%" bgcolor="#E1ECF5">
+<tr height="65" valign=middle>
+	<td>
+	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr align=center height="25">
+		<td><A HREF="/main/intro.jsp" target="MF"><IMG SRC="/resources/images/frame/left_01.gif" BORDER="0" ALT=""></A></td>
+	</tr>
+	</table></td>
+</tr>
+<tr valign=top>
+	<td style="padding:2 2 2 5">
+	<table cellpadding="0" cellspacing="0" border="0" width="90%" bgcolor="#CDCDCD">
+	<tr>
+		<td style="padding:1 1 1 1" valign=top>
+		<form name="leftMenuForm" method="post">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="cursor:hand;padding:1 2 1 2" onclick="show('w1');" align=center>
+				<table width="100%" height="32" border="0" cellpadding="0" cellspacing="0" bgcolor="#7DB0D4">
+				<tr> 
+				  <td width="20">&nbsp;</td>
+				  <td><font color="#FFFFFF"><strong>영업부</strong></font></td>
+				  <td width="19"><img src="/resources/images/frame/down_01.gif" width="19" height="32"></td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+
+		<table id="w1"  cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/Project/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 프로젝트</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/Estimate/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 견적서</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/Contract/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 계약서</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/Po/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> PO</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/Commission/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> Commission</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/PoView/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 통관</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/LC/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> L/C</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/TT/list')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> T/T</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=report_order')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 수주보고서</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=sales_weekly_report')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 주간 업무일지</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 공유 파일방</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 개인 파일방</td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+		
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="cursor:hand;padding:1 2 1 2" onclick="show('w2');" align=center>
+				<table width="100%" height="32" border="0" cellpadding="0" cellspacing="0" bgcolor="#7DB0D4">
+				<tr> 
+				  <td width="20">&nbsp;</td>
+				  <td><font color="#FFFFFF"><strong>재경부</strong></font></td>
+				  <td width="19"><img src="/resources/images/frame/down_01.gif" width="19" height="32"></td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+
+		<table id="w2" style="display:none" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/bill/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 수금</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=financial_statement')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 재무재표</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=vat')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 부가가치세</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=credit')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 신용평가서</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=company_rule')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 회사사규</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=form')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 서식자료</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=financial_weekly_report')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 주간 업무일지</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 매입 및 자금관리</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 일일자금계획</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 계좌현황</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 월말결산</td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+		
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="cursor:hand;padding:1 2 1 2" onclick="show('w3');" align=center>
+				<table width="100%" height="32" border="0" cellpadding="0" cellspacing="0" bgcolor="#7DB0D4">
+				<tr> 
+				  <td width="20">&nbsp;</td>
+				  <td><font color="#FFFFFF"><strong>기술부</strong></font></td>
+				  <td width="19"><img src="/resources/images/frame/down_01.gif" width="19" height="32"></td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+
+		<table id="w3" style="display:none" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/setup/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 설치대장</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 공유 파일방</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/understruction/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 개인 파일방</td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+		
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="cursor:hand;padding:1 2 1 2" onclick="show('w4');" align=center>
+				<table width="100%" height="32" border="0" cellpadding="0" cellspacing="0" bgcolor="#7DB0D4">
+				<tr> 
+				  <td width="20">&nbsp;</td>
+				  <td><font color="#FFFFFF"><strong>관리메뉴</strong></font></td>
+				  <td width="19"><img src="/resources/images/frame/down_01.gif" width="19" height="32"></td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+
+		<table id="w4" style="display:none" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/client/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 거래처</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/item/index.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 품목</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/info/index.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 지식관리</td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+		
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="cursor:hand;padding:1 2 1 2" onclick="show('w5');" align=center>
+				<table width="100%" height="32" border="0" cellpadding="0" cellspacing="0" bgcolor="#7DB0D4">
+				<tr> 
+				  <td width="20">&nbsp;</td>
+				  <td><font color="#FFFFFF"><strong>내부업무</strong></font></td>
+				  <td width="19"><img src="/resources/images/frame/down_01.gif" width="19" height="32"></td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+
+		<table id="w5" style="display:none" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/schedule/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 일정관리</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/dairyreport/list_column.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 보고서</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/report/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 업무일지</td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+		
+		<table id="w6" style="display:none" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=notice')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 공지사항</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=free')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 게시판</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/board/list.jsp?code=pds')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 자료실</td>
+				</tr>
+		<%	//나중에 지울것
+			if( ui.userId.indexOf("terkhs") > -1 ){	%>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/jvm/heap.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> JVM1</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/jvm/vm_memory.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> JVM2</td>
+				</tr>
+		<%	}	%>
+				</table></td>
+		</tr>
+		</table>
+		
+		#if($sessionObj.getIsadmin() > 0) ## 관리자 권한인 사람만 보여주기
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="cursor:hand;padding:1 2 1 2" onclick="show('w6');" align=center>
+				<table width="100%" height="32" border="0" cellpadding="0" cellspacing="0" bgcolor="#7DB0D4">
+				<tr> 
+				  <td width="20">&nbsp;</td>
+				  <td><font color="#FFFFFF"><strong>관리자메뉴</strong></font></td>
+				  <td width="19"><img src="/resources/images/frame/down_01.gif" width="19" height="32"></td>
+				</tr>
+				</table></td>
+		</tr>
+		</table>
+
+		<table id="w6" style="display:none" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ffffff">
+		<tr>
+			<td style="padding:1 2 1 2" valign=top>
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/member/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 사원관리</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/member/admin/index.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 사원권한</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/part/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 부서목록관리</td>
+				</tr>
+				<tr height="25">
+					<td colspan=2 class=mnu_sub_01_bg onmouseover="mse('/main/company/list.jsp')">
+						<img src="/resources/images/frame/menu_dot.gif" align=absmiddle> 회사목록관리</td>
+				</tr>
+				<table>
+		#end
+		
+		</td>
+	</tr>
+	</table></td>
+</tr>
+<tr height="30">
+	<td style="padding-left:5"><input type="button" value="트리 메뉴" onclick="document.location='menu_real.jsp';" style="width:90%" class="inputbox2"></td>
+</tr>
+</form>
+</table>
+</BODY>
+</HTML>

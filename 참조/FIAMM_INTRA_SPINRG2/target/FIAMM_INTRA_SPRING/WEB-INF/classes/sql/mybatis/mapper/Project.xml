@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.ProjectMapper"> 
+ <select id="getTotal" parameterType="map" resultType="int">
+ 	SELECT COUNT(seq) FROM project WHERE seq != 0
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE concat ('%', #{st}, '%')
+	</if>
+ </select>
+ 
+ <select id="getList" parameterType="map" resultType="Project">
+ 	SELECT * FROM project WHERE seq != 0
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+	ORDER BY stDate DESC,seq DESC LIMIT ${start},${pageSize}
+ </select>
+ 
+ <select id="getTotal2" parameterType="map" resultType="int">
+ 	SELECT COUNT(seq) FROM project WHERE seq != 0
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+	<if test='seq_client > 0'>
+		AND p.seq_client= #{seq_client}
+	</if>
+ </select>
+ 
+ <select id="getList2" parameterType="map" resultType="Project">
+ 	SELECT * FROM project WHERE seq != 0
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+	<if test='seq_client > 0'>
+		AND p.seq_client= #{seq_client}
+	</if>
+	ORDER BY stDate DESC,seq DESC LIMIT ${start},${pageSize}
+ </select>
+ 
+  <select id="getTotal3" parameterType="map" resultType="int">
+	<choose>
+		<when test='contract == 1'>
+			SELECT COUNT(DISTINCT(p.seq)) FROM project p,contract c WHERE p.seq = c.seq_project 
+		</when>
+		<otherwise>
+			 SELECT COUNT(seq) FROM project WHERE seq != 0
+		</otherwise>
+	</choose>
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+	<if test="seq_client > 0">
+		<choose>
+			<when test='seq_client == 1'>
+				AND p.seq_client= #{seq_client}
+			</when>
+			<otherwise>
+				  AND seq_client=#{seq_client}
+			</otherwise>
+		</choose>
+	</if>
+ </select>
+ 
+ <select id="getTotal4" parameterType="map" resultType="int">
+	<choose>
+		<when test='contract == 1'>
+			SELECT COUNT(DISTINCT(p.seq)) FROM project p,contract c WHERE p.seq = c.seq_project 
+		</when>
+		<otherwise>
+			 SELECT COUNT(p.seq) FROM project p WHERE p.seq != 0
+		</otherwise>
+	</choose>
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("userName")'>
+				 AND (SELECT userName FROM clientuser WHERE  seq=p.seq_clientUser) LIKE ('%', #{st}, '%') 
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+	</if>
+	<if test='seq_client > 0'>
+		AND p.seq_client= #{seq_client}
+	</if>
+	<if test='sStDate > 0'>
+		 AND ${schKinds}<![CDATA[>=]]>#{sStDate} 
+	</if>
+	<if test='sEdDate > 0'>
+		 AND ${schKinds}<![CDATA[<=]]>#{sEdDate} 
+	</if>
+	
+ </select>
+ 
+  <select id="getList3" parameterType="map" resultType="Project">
+
+	<choose>
+		<when test='contract == 1'>
+			SELECT DISTINCT(p.seq) AS n1,p.* FROM project p,contract c WHERE p.seq = c.seq_project
+		</when>
+		<otherwise>
+			SELECT p.* FROM project p WHERE p.seq != 0	
+		</otherwise>
+	</choose>
+	
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		<choose>
+			<when test='sk.equals("userName")'>
+				 AND (SELECT userName FROM clientuser WHERE  seq=p.seq_clientUser) LIKE ('%', #{st}, '%') 
+			</when>
+			<otherwise>
+				AND ${sk} LIKE ('%', #{st}, '%')
+			</otherwise>
+		</choose>
+	</if>
+	<if test='seq_client > 0'>
+		AND p.seq_client= #{seq_client}
+	</if>
+	<if test='sStDate > 0'>
+		 AND ${schKinds}<![CDATA[>=]]>#{sStDate} 
+	</if>
+	<if test='sEdDate > 0'>
+		 AND ${schKinds}<![CDATA[<=]]>#{sEdDate} 
+	</if>
+	ORDER BY stDate DESC,seq DESC LIMIT ${start},${pageSize}
+ </select>
+ 
+  <insert id="insert" parameterType="Project">
+ 	 INSERT INTO project(
+ 	 		seq_client,
+ 	 		seq_clientUser,
+ 	 		name,
+ 	 		stDate,
+ 	 		serial,
+ 	 		content,
+ 	 		userId,
+ 	 		wDate,
+ 	 		itemCom,
+ 	 		seq,
+ 	 		isCommission, 
+ 	 		com_seq_client
+ 	 )VALUES(
+ 	 		#{seq_client},
+			#{seq_clientUser},
+			#{name},
+			#{stDate},
+			#{serial},
+			#{content},
+			#{userId},
+			#{wDate},
+			#{itemCom},
+			#{seq},
+			#{isCommission},
+			#{com_seq_client}
+	)
+ </insert>
+ <delete id="delete" parameterType="map">
+ 	DELETE FROM Project WHERE seq=#{seq}
+ </delete>
+ 
+ <select id="selectOne" parameterType="map" resultType="Project">
+ 	SELECT * FROM project WHERE seq=#{seq}
+ </select>
+ 
+ <update id="update" parameterType="Project">
+ 	UPDATE 
+ 		project 
+ 	SET 
+ 		seq_clientUser = #{seq_clientUser},
+ 		name = #{name},
+ 		stDate=#{stDate},
+ 		serial=#{serial},
+ 		content=#{content},
+ 		itemCom=#{itemCom},
+ 		isCommission=#{isCommission}, 
+ 		com_seq_client=#{com_Seq_client}
+ 	WHERE 
+ 		seq=#{seq}
+ </update>
+ 
+  <select id="getList4" parameterType="map" resultType="Project">
+	SELECT * FROM  project ORDER BY stDate DESC,seq DESC 
+ </select>
+ 
+ <select id="getList5" parameterType="map" resultType="entity">
+	 SELECT * FROM  project WHERE seq_client=#{seq_client} Project BY stDate DESC, seq DESC 
+ </select>
+ 
+ <select id="getCommissionTotal" parameterType="map" resultType="int">
+  SELECT COUNT(seq) FROM project WHERE isCommission = 1 
+	
+	<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+		AND ${sk} LIKE ('%', #{st}, '%')
+	</if>
+	<if test='seq_client > 0'>
+		AND p.seq_client= #{seq_client}
+	</if>
+ </select>
+ 
+  <select id="getCommissionList" parameterType="String" resultType="Project">
+   SELECT * FROM  project WHERE isCommission = 1  
+	
+	<if test='seq_client > 0'>
+		AND p.seq_client= #{seq_client}
+	</if>
+	 ORDER BY stDate DESC,seq DESC LIMIT ${start},${pageSize}
+ </select>
+</mapper>

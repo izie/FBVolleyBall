@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.SetupItemMapper">
+ <select id="getIncreNum" parameterType="map" resultType="int">
+  SHOW TABLE STATUS LIKE #{tableName} 
+ </select> 
+ <insert id="insert1" parameterType="SetupItem">
+  INSERT INTO setupitem( seq_setup, seq_po, seq_poitem,	cnt, itemName)
+			    VALUES(#{seq_setup}, #{seq_po}, #{seq_poitem},	#{cnt}, #{itemName}) 
+ </insert>
+ <insert id="insert3" parameterType="SetupItem">
+ 	INSERT INTO setupitem( seq, seq_po, seq_poitem, cnt, itemName) VALUES(#{seq}, #{seq_po}, #{seq_poitem},	#{cnt}, #{itemName})
+ </insert>
+ 
+ <select id="selectOne" parameterType="map" resultType="SetupItem">
+ 	   SELECT * FROM setupitem WHERE seq=#{seq}
+ </select>
+ 
+ <select id="getCnt" parameterType="map" resultType="int">
+ 	   SELECT SUM(cnt) FROM setupitem WHERE seq_setup > 0 AND seq_poitem=#{seq_poItem}
+ </select>
+ 
+ <select id="getPoSum" parameterType="map" resultType="int">
+ 	  SELECT SUM(cnt) FROM setupitem WHERE seq_setup < 1 AND seq_po=#{seq_po}
+ </select>
+ 
+ <select id="getCount" parameterType="map" resultType="int">
+ 	   SELECT COUNT(seq) FROM setupitem WHERE seq_setup > 0 AND seq_poitem=#{seq_poItem}
+ </select>
+ 
+ <select id="selectList" parameterType="map" resultType="PoNo">
+ 	SELECT * FROM po WHERE poYear=#{poYear} ORDER BY poNum DESC LIMIT 0,1
+ </select>
+ <delete id="deleteOne" parameterType="map">
+ 	DELETE FROM setupitem WHERE seq=#{seq}
+ </delete>
+ 
+ <delete id="delete" parameterType="map">
+ 	DELETE FROM setupitem WHERE seq_setup=#{seq_setup}
+ </delete>
+ <delete id="deleteIn" parameterType="map">
+ 	DELETE FROM setupitem WHERE seq IN (#{seq_setupitem})
+ </delete>
+ 
+ <select id="getList" parameterType="map" resultType="SetupItem">
+ 	  SELECT * FROM setupitem WHERE seq_setup=#{seq_setup} ORDER BY seq
+ </select>
+ 
+ <select id="getListInPo" parameterType="map" resultType="SetupItem">
+ 	  SELECT * FROM setupitem WHERE seq_po=#{seq_po} ORDER BY seq
+ </select>
+ 
+ <select id="getListIn" parameterType="map" resultType="SetupItem">
+ 	   SELECT * FROM setupitem WHERE seq IN (${seq_pil}) ORDER BY seq
+ </select>
+ 
+ <update id="update" parameterType="map">
+ 	  UPDATE setupitem SET cnt=#{cnt},itemName=#{itemName} WHERE seq=#{seq}
+ </update>
+ 
+ <select id="getSum" parameterType="map" resultType="int">
+ 	    SELECT SUM(cnt) FROM setupitem WHERE seq_setup=0 AND seq_poItem=#{seq_poItem}
+ </select>
+ 
+</mapper>

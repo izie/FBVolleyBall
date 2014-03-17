@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izect.fiamm.mapper.LcMapper">
+	<select id="getValue1" parameterType="map" resultType="PoSum">
+		SELECT lcPriceKinds,SUM(lcPrice) FROM lc l,po p WHERE l.seq_po=p.seq
+		AND l.lcPrice > 0
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(bankCode)">
+			AND bankCode=#{bankCode}
+		</if>
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="seq_po > 0">
+			AND seq_po=#{seq_po}
+		</if>
+		<if test="seq_passItemLnk > 0">
+			AND seq_passItemLnk=#{seq_passItemLnk}
+		</if>
+		<if test='sStDate > 0'>
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+		<if test='sEdDate > 0'>
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		<if
+			test='@Ognl@isNotEmpty(priceKinds) and @Ognl@isNotEmpty(pKinds) and !priceKinds.equals("ALL")'>
+			AND ${pKinds} = #{priceKinds}
+		</if>
+
+		<choose>
+			<when test='viewMode.equals("ING")'>
+				AND l.lcPayDate <![CDATA[<]]> 1
+			</when>
+			<when test='viewMode.equals("CPT")'>
+				AND l.lcPayDate <![CDATA[>]]> 0
+			</when>
+		</choose>
+		GROUP BY lcPriceKinds
+	</select>
+
+	<select id="getValue2" parameterType="map" resultType="PoSum">
+		SELECT guarPriceKinds,SUM(guarPrice) FROM lc l,po p WHERE
+		l.seq_po=p.seq AND l.lcPrice > 0
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(bankCode)">
+			AND bankCode=#{bankCode}
+		</if>
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="seq_po > 0">
+			AND seq_po=#{seq_po}
+		</if>
+		<if test="seq_passItemLnk > 0">
+			AND seq_passItemLnk=#{seq_passItemLnk}
+		</if>
+		<if test='sStDate > 0'>
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+		<if test='sEdDate > 0'>
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		<if
+			test='@Ognl@isNotEmpty(priceKinds) and @Ognl@isNotEmpty(pKinds) and !priceKinds.equals("ALL")'>
+			AND ${pKinds} = #{priceKinds}
+		</if>
+
+		<choose>
+			<when test='viewMode.equals("ING")'>
+				AND l.lcPayDate <![CDATA[<]]> 1
+			</when>
+			<when test='viewMode.equals("CPT")'>
+				AND l.lcPayDate <![CDATA[>]]> 0
+			</when>
+		</choose>
+		GROUP BY guarPriceKinds
+	</select>
+
+	<select id="getTotal" parameterType="map" resultType="int">
+		SELECT COUNT(l.seq) FROM lc l,po p WHERE l.seq_po=p.seq AND l.lcPrice
+		> 0
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(bankCode)">
+			AND bankCode=#{bankCode}
+		</if>
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="seq_po > 0">
+			AND seq_po=#{seq_po}
+		</if>
+		<if test="seq_passItemLnk > 0">
+			AND seq_passItemLnk=#{seq_passItemLnk}
+		</if>
+		<if test='sStDate > 0'>
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+		<if test='sEdDate > 0'>
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		<if
+			test='@Ognl@isNotEmpty(priceKinds) and @Ognl@isNotEmpty(pKinds) and !priceKinds.equals("ALL")'>
+			AND ${pKinds} = #{priceKinds}
+		</if>
+
+		<choose>
+			<when test='viewMode.equals("ING")'>
+				AND l.lcPayDate <![CDATA[<]]> 1
+			</when>
+			<when test='viewMode.equals("CPT")'>
+				AND l.lcPayDate <![CDATA[>]]> 0
+			</when>
+		</choose>
+		GROUP BY guarPriceKinds
+	</select>
+
+	<select id="getList1" parameterType="map" resultType="Lc">
+		SELECT * FROM lc l,po p WHERE l.seq_po=p.seq AND l.lcPrice > 0
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+		</if>
+		<if test="@Ognl@isNotEmpty(bankCode)">
+			AND bankCode=#{bankCode}
+		</if>
+		<if test="seq_client > 0">
+			AND seq_client=#{seq_client}
+		</if>
+		<if test="seq_po > 0">
+			AND seq_po=#{seq_po}
+		</if>
+		<if test="seq_passItemLnk > 0">
+			AND seq_passItemLnk=#{seq_passItemLnk}
+		</if>
+		<if test='sStDate > 0'>
+			AND ${schKinds}<![CDATA[>=]]>#{sStDate}
+		</if>
+		<if test='sEdDate > 0'>
+			AND ${schKinds}<![CDATA[<=]]>#{sEdDate}
+		</if>
+		<if
+			test='@Ognl@isNotEmpty(priceKinds) and @Ognl@isNotEmpty(pKinds) and !priceKinds.equals("ALL")'>
+			AND ${pKinds} = #{priceKinds}
+		</if>
+
+		<choose>
+			<when test='viewMode.equals("ING")'>
+				AND l.lcPayDate <![CDATA[<]]> 1
+			</when>
+			<when test='viewMode.equals("CPT")'>
+				AND l.lcPayDate <![CDATA[>]]> 0
+			</when>
+		</choose>
+		ORDER BY ${oby} LIMIT ${start},${pageSize}
+	</select>
+	<select id="getList2" parameterType="map" resultType="Lc">
+		SELECT *
+		FROM lc WHERE seq_po=#{seq_po}
+	</select>
+	<select id="getListPil" parameterType="map" resultType="Lc">
+		SELECT *
+		FROM lc WHERE seq_passItemLnk=#{seq_passItemLnk}
+	</select>
+	<select id="getListPilCnt" parameterType="map" resultType="int">
+		SELECT COUNT(seq) FROM lc WHERE seq_passItemLnk=#{seq_passItemLnk}
+	</select>
+	<select id="getListCnt" parameterType="map" resultType="int">
+		SELECT
+		COUNT(seq) FROM lc WHERE seq_po=#{seq_po}
+	</select>
+	<select id="selectOne" parameterType="map" resultType="Lc">
+		SELECT *
+		FROM lc WHERE seq=#{seq}
+	</select>
+	<select id="selectOnePo" parameterType="map" resultType="Lc">
+		SELECT *
+		FROM lc WHERE seq_po=#{seq_po}
+	</select>
+	<insert id="insert" parameterType="Lc">
+		INSERT INTO
+		lc(seq_po,lcOpenDate,lcNum,bankCode,bankName
+		,lcPrice,lcPriceKinds,lcLimitDate,blDate,guarPrice
+		,guarPriceKinds,memo,userId,wDate,lcPayDate
+		,seq_passItemLnk, atsight,
+		blRecDate, seq, rate
+		,rPrice )
+		VALUES
+		(#{seq_po},#{lcOpenDate},#{lcNum},#{bankCode},#{bankName},#{lcPrice},#{lcPriceKinds},#{lcLimitDate},#{blDate},#{guarPrice},#{guarPriceKinds},#{memo},#{userId},#{wDate},#{lcPayDate},#{seq_passItemLnk},#{atsight},#{blRecDate},#{seq},#{rate},#{rPrice})
+	</insert>
+	<update id="update" parameterType="Lc">
+		UPDATE lc SET
+		lcOpenDate=#{lcOpenDate},lcNum=#{lcNum},bankCode=#{bankCode},bankName=#{bankName},lcPrice=#{lcPrice},lcPriceKinds=#{lcPriceKinds},lcLimitDate=#{lcLimitDate},blDate=#{blDate},guarPrice=#{guarPrice},guarPriceKinds=#{guarPriceKinds},memo=#{memo},lcPayDate=#{lcPayDate},atsight=#{atsight},blRecDate=#{blRecDate},
+		rate=#{rate}, rPrice=#{rPrice} WHERE seq=#{seq}
+	</update>
+	
+	<delete id="deleteOne" parameterType="map">
+		DELETE FROM lc WHERE seq=#{seq}
+	</delete>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM lc WHERE seq_po=#{seq_po}
+	</delete>
+
+</mapper>

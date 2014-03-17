@@ -1,0 +1,16 @@
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+#if(! $sessionObj || $sessionObj.getGrade() < 1)
+	<SCRIPT LANGUAGE="JavaScript">
+		try{
+			if( top.opener.top.document ){
+				top.opener.top.document.location.href='/';
+				top.window.close();
+			}else{
+				top.document.location.href='/';
+			}		
+		}catch(e){
+			top.window.close();
+		}
+		</SCRIPT>
+#end

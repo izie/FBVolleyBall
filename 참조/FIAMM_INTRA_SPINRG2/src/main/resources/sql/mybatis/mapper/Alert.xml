@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izect.fiamm.mapper.AlertMapper">
+	<select id="getTotal" parameterType="map" resultType="int">
+		SELECT COUNT(seq) FROM alert WHERE seq != 0
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+			AND effect = #{effect}
+			AND(
+			(
+			err_name='A_contract' )
+			OR ( err_name='B_nopo' )
+			OR (
+			err_name='C1_pass' )
+			OR ( err_name='C2_pass' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='D1_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='D2_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='D3_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='E1_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='E2_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='F1_lc' AND stDate = #{nowDate} )
+			OR ( err_name='F2_lc'
+			AND stDate = #{nowDate} )
+			OR ( err_name='F3_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='G1_tt' AND stDate = #{nowDate} )
+			OR ( err_name='G2_tt'
+			AND stDate = #{nowDate} )
+			OR ( err_name='G3_tt' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='H1_bill' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			)
+		</if>
+	</select>
+
+	<select id="getList" parameterType="map" resultType="Alert">
+		SELECT * FROM alert WHERE seq != 0
+		<if test="effect >= 0">
+			AND effect=#{effect}
+		</if>
+		<if test="@Ognl@isNotEmpty(sk) and @Ognl@isNotEmpty(st)">
+			AND ${sk} LIKE ('%', #{st}, '%')
+			AND effect = #{effect}
+			AND(
+			(
+			err_name='A_contract' )
+			OR ( err_name='B_nopo' )
+			OR (
+			err_name='C1_pass' )
+			OR ( err_name='C2_pass' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='D1_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='D2_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='D3_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='E1_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='E2_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='F1_lc' AND stDate = #{nowDate} )
+			OR ( err_name='F2_lc'
+			AND stDate = #{nowDate} )
+			OR ( err_name='F3_lc' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='G1_tt' AND stDate = #{nowDate} )
+			OR ( err_name='G2_tt'
+			AND stDate = #{nowDate} )
+			OR ( err_name='G3_tt' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			OR ( err_name='H1_bill' AND stDate<![CDATA[<=]]>#{nowDate}
+			)
+			)
+		</if>
+		<choose>
+			<when test="@Ognl@isNotEmpty(oby)">
+				ORDER BY #{oby}
+			</when>
+			<otherwise>
+				ORDER BY seq
+			</otherwise>
+		</choose>
+		<if test="pageSize > 0">
+			ORDER BY bizName LIMIT ${start},${pageSize}
+		</if>
+
+	</select>
+
+	<insert id="insert" parameterType="Alert">
+		INSERT INTO
+		alert(seq_project,err_name,err_seq, memo, seq_po ,stDate,
+		edDate,
+		effect )
+		VALUES(#{seq_project},#{err_name},#{err_seq},#{memo},#{seq_po},#{stDate},#{edDate},#{effect})
+	</insert>
+	<select id="selectOne" parameterType="map" resultType="Alert">
+		SELECT *
+		FROM alert WHERE seq=#{seq}
+	</select>
+
+	<update id="updateEffect1" parameterType="Alert">
+		UPDATE alert SET
+		effect=#{effect} WHERE seq=#{seq}
+	</update>
+
+	<update id="updateEffect2" parameterType="map">
+		UPDATE alert SET
+		effect=#{eff} WHERE seq=#{seq}
+	</update>
+
+
+
+	<select id="isIt" parameterType="map" resultType="Alert">
+		SELECT * FROM
+		alert WHERE seq_project=#{seq_project} AND
+		err_seq=#{err_seq} AND
+		err_name=#{err_name}
+	</select>
+
+	<delete id="delete" parameterType="map">
+		DELETE FROM alert WHERE
+		seq_project=#{seq_project} AND err_seq=#{err_seq} AND
+		err_name=#{err_name}
+	</delete>
+
+	<delete id="delete1" parameterType="map">
+		DELETE FROM alert WHERE
+		seq_po=#{seq_po} AND err_seq=#{err_seq} AND err_name=#{err_name}
+	</delete>
+
+	<delete id="delete2" parameterType="map">
+		DELETE FROM alert WHERE
+		err_seq=#{err_seq} AND err_name=#{err_name}
+	</delete>
+
+	<update id="update1" parameterType="map">
+		UPDATE alert SET
+		effect=#{effect} WHERE seq_project=#{seq_project} AND
+		err_seq=#{err_seq} AND err_name=#{err_name}
+	</update>
+
+	<update id="update2" parameterType="map">
+		UPDATE alert SET
+		effect=#{effect} WHERE seq_po=#{seq_po} AND err_seq=#{err_seq} AND
+		err_name=#{err_name}
+	</update>
+
+	<update id="update3" parameterType="map">
+		UPDATE alert SET
+		effect=#{effect} WHERE err_seq=#{err_seq} AND
+		err_name=#{err_name}
+	</update>
+
+	<delete id="delContract" parameterType="map">
+		DELETE FROM alert WHERE
+		seq_project=#{seq_project} AND err_seq=#{err_seq} AND (
+		err_name='B_nopo' OR err_name='A_contract')
+	</delete>
+
+	<delete id="delPo" parameterType="map">
+		DELETE FROM alert WHERE
+		seq_po=#{seq_po}
+	</delete>
+
+	<update id="updatePoEffect" parameterType="map">
+		UPDATE alert SET
+		effect=0 WHERE seq_po=#{seq_po}
+	</update>
+
+	<select id="updatePoEff" parameterType="map" resultType="Entity">
+		SELECT
+		seq FROM po WHERE poYear=#{poYear} AND poNum=#{poNum} AND
+		poCnt=#{poCnt}
+	</select>
+
+	<select id="chkInUp1" parameterType="map" resultType="Alert">
+		SELECT *
+		FROM alert WHERE seq_po=#{seq_po} AND err_seq=#{seq_pil} AND
+		err_name=#{err_name}
+	</select>
+
+	<update id="chkInUp2" parameterType="map">
+		UPDATE alert SET
+		effect=#{effect},stDate=#{stDate} WHERE seq_po=#{seq_po} AND
+		err_seq=#{seq_pil} AND err_name=#{err_name}
+	</update>
+
+	<update id="updatePass" parameterType="map">
+		UPDATE alert SET
+		effect=#{effect} WHERE seq_po=#{seq_po} AND err_seq=#{seq_pil} AND
+		err_name=#{err_name}
+	</update>
+	
+	<update id="updateAll" parameterType="map">
+		UPDATE alert SET effect=#{effect} WHERE seq_po=#{seq_po}
+	</update>
+
+</mapper>

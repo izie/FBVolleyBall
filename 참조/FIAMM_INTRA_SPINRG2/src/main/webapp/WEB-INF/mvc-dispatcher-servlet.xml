@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.izect.fiamm.*" />
+    <context:annotation-config></context:annotation-config>
+    <!--
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean> -->
+    <!-- Velocity Configure -->
+    <bean id="velocityConfigurer"
+                class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/views/" />
+        <property name="overrideLogging" value="false" />
+        <property name="velocityProperties">
+            <props>
+                <prop key="resource.loader">file</prop>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <prop key="file.resource.loader.cache">false</prop>
+                <prop key="springMacro.resource.loader.cache">false</prop>
+                <prop key="counter.name">velocityCount</prop>
+                <prop key="counter.initial.value">1</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="viewResolver"
+                class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="requestContextAttribute" value="rc" />
+        <property name="cache" value="false" />
+        <property name="suffix" value=".vm" />
+        <property name="order" value="1"></property>
+        <property name="contentType" value="text/html; charset=UTF-8" />
+        <property name="viewClass"
+                        value="org.springframework.web.servlet.view.velocity.VelocityView" />
+        <property name="prefix" value="" />
+        <property name="toolboxConfigLocation" value="WEB-INF/classes/config/velocity/velocity-toolbox.xml"/>
+    </bean>
+    <import resource="applicationContext-mybatis.xml" />
+
+
+</beans>

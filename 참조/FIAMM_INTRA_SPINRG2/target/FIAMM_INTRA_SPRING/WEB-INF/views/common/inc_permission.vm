@@ -1,0 +1,75 @@
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<%
+	Database db = new Database();
+	
+try{
+	//세션
+	UserInfo ui = (UserInfo)session.getAttribute("USERINFO");
+	
+
+	//생성자
+	UPermissionDAO upDAO = new UPermissionDAO(db);
+
+	
+	//request
+	String loc	= KUtil.nchk(request.getParameter("loc"));
+	String col	= KUtil.nchk(request.getParameter("col"));
+	
+	if( col.equals("L") ) col = "lis_";
+	else if( col.equals("W") ) col = "wri_";
+	else if( col.equals("M") ) col = "mod_";
+	else if( col.equals("V") ) col = "vie_";
+	else if( col.equals("D") ) col = "del_";
+	else{
+		ui.stopflag = 1;
+		session.setAttribute("USERINFO",ui);	%>
+			<SCRIPT LANGUAGE="JavaScript">
+			var len = 0;
+			try{
+				try{ len = top.opener.document.all.length; }catch(e){}
+				if( len != 0 ){
+					alert("접근 권한이 없습니다.\n\n관리자에게 문의하십시요!");
+					top.window.close();
+				}else{
+					alert("접근 권한이 없습니다.\n\n관리자에게 문의하십시요!");
+					history.back();
+				}
+			}catch(e){
+				top.window.close();	
+			}
+			</SCRIPT>
+<%		return;
+	}
+	
+	
+	if( ui==null || ui.grade < 1 || ui.isadmin != 1 ){
+		if( upDAO.getPermission(ui.userId, loc, col) != 1 ){
+			ui.stopflag = 1;
+			session.setAttribute("USERINFO",ui);	%>
+			<SCRIPT LANGUAGE="JavaScript">
+			var len = 0;
+			try{
+				try{ len = top.opener.document.all.length; }catch(e){}
+				if( len != 0 ){
+					alert("접근 권한이 없습니다.\n\n관리자에게 문의하십시요!");
+					top.window.close();
+				}else{
+					alert("접근 권한이 없습니다.\n\n관리자에게 문의하십시요!");
+					history.back();
+				}
+			}catch(e){
+				top.window.close();	
+			}
+			</SCRIPT>
+<%			return;
+		}
+	}
+
+}catch(Exception e){
+	out.print(e.toString());
+}finally{
+	db.closeAll();
+	db = null;
+}
+%>

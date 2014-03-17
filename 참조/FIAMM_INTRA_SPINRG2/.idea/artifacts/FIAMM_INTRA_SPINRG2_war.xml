@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="FIAMM_INTRA_SPINRG2:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="FIAMM_INTRA_SPRING.war">
+      <element id="artifact" artifact-name="FIAMM_INTRA_SPINRG2:war exploded" />
+    </root>
+  </artifact>
+</component>

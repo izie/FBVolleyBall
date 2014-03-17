@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izect.fiamm.mapper.TT_paymentMapper">
+	<insert id="insert" parameterType="TT_payment">
+		INSERT INTO
+		tt_payment(seq_tt,pDate,price,memo)
+		VALUES(#{seq_tt},#{pDate},#{price},#{memo})
+	</insert>
+	<select id="selectList" parameterType="map" resultType="TT_payment">
+		SELECT *
+		FROM tt_payment WHERE seq_tt=#{seq_tt} ORDER BY seq DESC
+	</select>
+
+	<select id="getListCnt" parameterType="map" resultType="int">
+		SELECT
+		COUNT(seq) FROM tt_payment WHERE seq_tt=#{seq_tt} ORDER BY seq DESC
+	</select>
+	<delete id="delete" parameterType="map">
+		DELETE FROM tt_payment WHERE
+		seq=#{seq}
+	</delete>
+	<delete id="deleteAll" parameterType="map">
+		DELETE FROM tt_payment
+		WHERE seq_tt=#{seq_tt}
+	</delete>
+	<select id="selectOne" parameterType="map" resultType="TT_payment">
+		SELECT * FROM tt_payment WHERE seq = #{seq}
+	</select>
+</mapper>

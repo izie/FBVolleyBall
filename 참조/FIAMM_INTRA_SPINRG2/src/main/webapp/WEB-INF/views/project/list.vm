@@ -1,0 +1,360 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : intro.vm
+  -- PGM 내용 : 메인 로그인 화면
+  -- 개발자  	 :  장익환
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+## 필수 설정 인클루드
+#parse("/common/inc_common.vm")
+
+## 로그인 체크
+#parse("/common/inc_loginCheck.vm")
+
+##  세션 체크
+#parse("/common/inc_sessionStopCheck.vm")
+
+## 로그인 했을 경우 세션정보 저장
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='$!{rctx}/css/style.css' rel='stylesheet' type='text/css'>
+<title>FIAMM  KOREA INTRANET</title>
+
+## 개발  js/css 인클루드
+#parse("/common/inc_js.vm")
+
+## 페이지 jquery 인클루드
+<SCRIPT LANGUAGE="JavaScript" src="/common/list_print.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript">
+function move(pge){
+	var frm = document.projectForm;
+	frm.nowPage.value = pge;
+	frm.action = "list.jsp";
+	frm.submit();
+}
+function reloadpage(){
+	var frm = document.projectForm;
+	frm.action = "list.jsp?repage=1";
+	frm.submit();
+}
+function goWork(m){
+	var frm = document.projectForm;
+	frm.action = "write.jsp";
+	frm.submit();
+}
+function selectClient(){
+	var frm = document.projectForm;
+	frm.nowPage.value = 1;
+	frm.action = "list.jsp";
+	frm.submit();
+}
+function goModify(i, seq){
+	var frm = document.projectForm;
+	frm.id_show.value = i;
+	frm.seq_project.value = seq;
+	frm.seq.value = seq;
+	var lft = (screen.availWidth-700)/2;
+	var tp	= (screen.availHeight-390)/2;
+	var pop = window.open("mod.jsp?seq="+seq+"&reload=4","viewProject","width=700,height=390,scrollbars=0,left="+lft+",top="+tp);
+	pop.focus();
+	
+}
+function goDelete(seq){
+	var frm = document.projectForm;
+	if( confirm("삭제하시겠습니까?") ){
+		frm.seq.value = seq;
+		frm.action = "DBD.jsp";
+		frm.submit();
+	}
+}
+function popView(seq){
+	var frm = document.projectForm;
+	var lft = (screen.availWidth-720)/2;
+	var tp	= (screen.availHeight-600)/2;
+	var pop = window.open("","viewProject","width=720,height=600,scrollbars=1,left="+lft+",top="+tp);
+	frm.seq.value = seq;
+	frm.target = "viewProject";
+	frm.action = "view.jsp";
+	frm.submit();
+}
+function chkSearch(){
+	var frm = document.projectForm;
+	frm.nowPage.value = "1";
+	frm.action = "list.jsp";
+}
+function popAllDoc(seq_project){
+	var lft = screen.availWidth-10;
+	var tp = screen.availHeight;
+	var pop = window.open("/main/view_all/index.jsp?seq_project="+seq_project,"allview","top=0,left=1,resizable=1,scrollbars=0,width="+lft+",height="+tp);
+	pop.focus();
+}
+function projAdd(){
+	var pop = window.open("write.jsp","padd","scrollbars=yes");
+	pop.focus();
+}
+function clickProject( i, seq_project ){
+	document.getElementById('ifm_'+i).src = "/main/project/one_inte_view.jsp?seq_project="+seq_project+"&id="+i;
+	show2('id_'+i);
+}
+function addEstimate( i, seq_project ){
+	var lt = (screen.availWidth-720)/2;
+	var pop = window.open("/main/estimate/write.jsp?reload=4&reloadval="+i+"&seq_project="+seq_project,"estAdd","left="+lt+",top=0,width=720,height=700, scrollbars=1");
+	pop.focus();
+}
+function inContract(seq_project){
+	var lft = (screen.availWidth-720)/2;
+	var tp = (screen.availHeight-600)/2;
+	var pop = window.open("/main/contract/write.jsp","padd","top="+tp+",left="+lft+",scrollbars=1,width=720,height=600");
+	pop.focus(); 
+}
+function modifyCon(seq){
+	var frm = document.projectForm;
+	var lft = (screen.availWidth-700)/2;
+	var tp = (screen.availHeight-660)/2;
+	var pop = window.open("/main/contract/mod.jsp?seq="+seq+"&reload=4","padd","top="+tp+",left="+lft+",scrollbars=0,width=700,height=660");
+	pop.focus();
+}
+function show_itemout( i, seq_project ){
+	var frm = document.projectForm;
+	var obj = eval("id_item"+i);
+	if( obj.style.display == "none" ){
+		document.frames['fme_item'+i].location = "ifme_itemout_list.jsp?seq_project="+seq_project;
+		obj.style.display = "block";
+	}else{
+		obj.style.display = "none";
+	}
+}
+function viewClient(seq){
+	var lft = (screen.availWidth-720)/2;
+	var tp = (screen.availHeight-660)/2;
+	var pop = window.open("/main/client/view.jsp?seq="+seq,"viClient","top="+tp+",left="+lft+",scrollbars=1,width=720,height=660");
+	pop.focus();
+}
+function viewClientUser(seq_fk, seq){
+	var lft = (screen.availWidth-720)/2;
+	var tp = (screen.availHeight-660)/2;
+	var pop = window.open("/main/client/clientUser_view.jsp?sub_seq="+seq+"&seq="+seq_fk,"viClientUser","top="+tp+",left="+lft+",scrollbars=1,width=720,height=660");
+	pop.focus();
+}
+function addPo(i, seq_project){
+	var lt = (screen.availWidth-720)/2;
+	var pop = window.open("/main/po/write.jsp?reload=4&reloadval="+i+"&seq_project="+seq_project,"poAdd","left="+lt+",top=0,width=720,height=700, scrollbars=1");
+	pop.focus();
+}
+function showboxPosition(object,work,left,top){
+	var obj = document.getElementById(object); 
+	obj.style.pixelLeft = event.clientX + document.body.scrollLeft + Number(left);
+	obj.style.pixelTop	= event.clientY + document.body.scrollTop + Number(top)+10;
+	obj.style.display	= work;
+}
+function conListView(){
+	var frm = document.projectForm;
+	if( frm.contract.value == '1')
+		frm.contract.value = '0';
+	else
+		frm.contract.value = '1';
+	frm.nowPage.value = '1';
+	frm.action = "list.jsp";
+	frm.submit();
+}
+function repage(){
+	var frm = document.projectForm;
+	frm.action = "list.jsp";
+	frm.submit();
+}
+function chPageSize(){
+	var frm = document.forms[0];
+	frm.action = "list.jsp";
+	frm.nowPage.value=1;
+	frm.submit();
+}
+function popPrint(){
+	var frm = document.projectForm;
+	var w = screen.availWidth;
+	var h = screen.availHeight;
+	var pop = window.open("","listprint","width=800,height=600");
+	frm.nowPage.value = 1;
+	frm.target = "listprint";
+	frm.action = "list.jsp?prn=1";
+	frm.submit();
+	pop.focus();
+	frm.target = "_self";
+}
+</SCRIPT>
+</HEAD>
+
+<BODY #if($prn != 1)"class='body1'"#end>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+
+<form name="projectForm" method="post" onsubmit="return chkSearch();">
+<input type="hidden" name="nowPage" value="$!{nowPage}">
+<input type="hidden" name="contract" value="$!{contract}">
+<input type="hidden" name="seq" value="">
+<input type="hidden" name="id_show" value="">
+<input type="hidden" name="seq_project" value="">
+
+<tr>
+	<td><IMG SRC="/images/icon01.gif" WIDTH="4" HEIGHT="16" BORDER="0" ALT="" align=absmiddle>
+		<B><FONT SIZE="4">프로젝트 리스트</FONT></B></td>
+</tr>
+
+#if($params.prn != 1)
+<tr>
+	<td class="ti1">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+		<tr>
+			<td width="150">&nbsp;▶ 전체: $!{totCnt} 건</td>
+			<td	align=right>
+				<select name="seq_client" onchange="selectClient()" class="selbox">
+					<option value="">▒▒전체 업체▒▒</option>
+			<%	Vector vecClient = cDAO.getClient("매출");
+				for( int i=0 ; i<vecClient.size() ; i++ ){	
+					Client cl  = (Client)vecClient.get(i);	%>
+					<option value="<%=cl.seq%>" <%=cl.seq==seq_client?"selected":""%>><%=cl.bizName%></option>
+			<%	}//for	%>
+				</select>
+
+				<select name="sk" class="selbox">
+					<option value="name" #if($sk == "name")selected#end>프로젝트명</option>
+					<option value="itemCom" #if($sk == "itemCom")selected#end>제조업체</option> 
+					<option value="userName" #if($sk == "userName")selected#end>담당자</option>
+				</select>
+				<input type="text" name="st" value="$!{param.st}" class="inputbox">&nbsp;</td>
+			<td rowspan=2 width="50"><input type="submit" value="검색" class="inputbox2" style="height:40"></td>
+		</tr>
+		<tr>
+			<td><select name="pageSize" class="selbox" onchange="chPageSize()">
+					<option value="5" #if($pageSize == "5")selected#end>5개씩보기</option>
+					<option value="10" #if($pageSize == "10")selected#end>10개씩보기</option>
+					<option value="15" #if($pageSize == "15")selected#end>15개씩보기</option>
+					<option value="20" #if($pageSize == "20")selected#end>20개씩보기</option>
+					<option value="30" #if($pageSize == "30")selected#end>30개씩보기</option>
+					<option value="50" #if($pageSize == "50")selected#end>50개씩보기</option>
+					<option value="100" #if($pageSize == "100")selected#end>100개씩보기</option>
+					<option value="$!{totCnt}" #if($pageSize == $totCnt)selected#end>전체보기</option>
+				</select>
+                <input type="button" value="프린트" onclick="popPrint();" class="Btn_prn"></td>
+			<td align=right>
+				<FONT class="schDuring">기간검색:
+				<input type="text" name="sStDate" value="#if($params.sStDate > 0)$!{param.sStDate}#end" class="inputbox" size=8 maxlength=8> 
+				~ 
+				<input type="text" name="sEdDate" value="#if($params.sEdDate > 0)$!{param.sEdDate}#end" class="inputbox" size=8 maxlength=8>
+				<select name="schKinds" class="selbox">
+					<option value="p.stDate" #if($params.schKinds == "p.stDate")selected#end>시작일</option>
+				</select></FONT>&nbsp;</td>
+		</tr>
+		</table></td>
+</tr>
+#else
+<tr><td>▶ 전체: $!{totCnt} 건</td></tr>
+#end
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="line-table2">
+<tr align=center height=30>
+	<th width="8%">시작일</th>
+	
+	<th width="22%">업체명</th>
+	
+	<th width="42%">프로젝트명</th>
+	
+	<th width="15%">제조업체</th>
+	
+	<th width="8%">담당자</th>
+	
+	<th width="5%"><A HREF="javascript:conListView()">계약</A></th>
+</tr>
+
+#if($rList.size() > 0)
+#set($num = 0)
+#foreach($rslt in $rList)
+
+	#set ($pj = $rstl.pj)
+	
+	#set ($cu = $rstl.cu)
+	#set ($i = 0)
+	#if($i%2 == 0)
+		#set ($cls = "databg_line")
+	#end
+<tr align=center height=25>
+	<td class="$!{cls}">$KUtil.dateMode($rslt.pj.getStDate(),"yyyyMMdd","yy.MM.dd","&nbsp;")</td>
+	
+	<td class="$!{cls}" align=left>
+		<A HREF="javascript:viewClient('$rslt.cu.getSeq()')"><%=KUtil.nchk(cl.bizName,"&nbsp;")%></A></td>
+	
+	<td class="$!{cls}" align=left>
+		<A HREF="javascript:" onclick="clickProject($!{i},'<%=pj.seq%>')">
+			<FONT  COLOR="#000080">$KUtil.nchk($rslt.pj.getName())</FONT></A></td>
+	
+	<td class="$!{cls}" align=left style="padding-left:3">$KUtil.nchk($KUtil.toTextMode($rslt.pj.getItemCom()),"&nbsp;")</td>
+	
+	<td class="$!{cls}" align=left>
+		#if( $rslt.cu.getSeq() > 0 )
+			<A HREF="javascript:viewClientUser('$rslt.cu.getSeq_fk()%>','$rslt.cu.getSeq()')">
+		#end
+			$KUtil.nchk($rslt.cu.getUserName(),"&nbsp;")</A></td>
+	
+	<td class="$!{cls}">
+		<%=conCnt>0?"Y":"N"%></td>
+</tr>
+
+
+<tr style="display:none;" id="id_$!{i}" height="50">
+	<td colspan=6><iframe name="ifm_$!{i}" id="ifm_$!{i}" width="100%" height="200" frameborder="0"></iframe></td>
+</tr>
+#set($num = $num + 1)
+#set($i = $i + 1)
+#end
+#end
+#if($listProject.size() == 0)
+<tr align=center height=50>
+	<td colspan=6>데이타가 존재하지 않습니다.</td>
+</tr>
+#end
+</table>
+
+#if($params.prn != 1)
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr align=center>
+	<td colspan=12 class="bmenu">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+		<tr>
+			<td>$!{indicator}</td>
+			<td align=right>
+				<input type="button" value="프로젝트추가" onclick="projAdd();" class="inputbox2">&nbsp;</td>
+		</tr>
+		</table></td>
+</tr>
+#end
+
+</table>
+</form>
+</BODY>
+</HTML>
+
+<div id="id_str" style="display:none"></div>
+
+
+<jsp:include page="/inc/inc_print.jsp" flush="true"/>
+
+
+<%
+	if( repage == 1 ){
+		KUtil.scriptOut(out,"clickProject('"+id_show+"',"+seq_project+");");
+	}
+
+	if( prn == 1 ){
+		KUtil.scriptOut(out, "list_print_preview()");
+	}
+}catch(Exception e){
+	out.print(e.toString());
+}finally{
+	db.closeAll();
+}
+%>
+
+

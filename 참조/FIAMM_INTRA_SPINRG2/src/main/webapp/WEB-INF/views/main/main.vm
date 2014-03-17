@@ -1,0 +1,53 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : main.vm
+  -- PGM 내용 : 메인 화면
+  -- 개발자  
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+## 필수 설정 인클루드
+#parse("/common/inc_common.vm")
+
+## 로그인 했을 경우 세션정보 저장
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='$!{rctx}/css/common.css' rel='stylesheet' type='text/css'>
+<title>FIAMM  KOREA INTRANET</title>
+
+## 개발  js/css 인클루드
+#parse("/common/inc_js.vm")
+
+## 페이지 jquery 인클루드
+<SCRIPT LANGUAGE="JavaScript">
+function F5keydown(){
+	if(event.keyCode== 116) {
+	  window.event.keyCode = "";
+	  document.frames['MF'].location.reload();
+	  return false;
+	}
+}
+document.onkeydown=F5keydown;
+</SCRIPT>
+</head>
+#if($leftFrame == "")
+	#set ($lf = "/main/menu")
+#else
+	#set ($lf = $leftFrame)
+#end
+#if($rightFrame == "")
+	#set ($rf = "/main/intro")
+#else
+	#set ($rf = $rightFrame)
+#end
+
+
+<FRAMESET name="TM" cols="160,*" FRAMESPACING="1" frameborder="1" border=1 BORDERCOLOR="#AEAEAE">
+    <FRAME name="LF" id="LF"  src="$!{lf}"  FRAMEBORDER="no"  scrolling="no" BORDER="0" ></FRAME> 
+    <FRAME name="MF" id="MF" src="$!{rf}" FRAMEBORDER="no" scrolling="AUTO"></FRAME> 
+</FRAMESET>
+<noframes><body></body></noframes>
+
+</HTML>

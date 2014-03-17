@@ -1,0 +1,266 @@
+<%@page language="Java" contentType="text/html; charset=euc-kr"%>
+<%@ page import = "java.sql.*"%>				 
+<%@ page import = "java.util.*,java.io.*"%>				 
+<%@ page import = "pool.*,com.util.khs.*,dao.*"%>
+<% request.setCharacterEncoding("euc-kr");  %>
+
+<%@ include file="/inc/inc_loginCheck.jsp"%>
+
+<%
+	Database db = new Database();
+try{ 
+	int seq = KUtil.nchkToInt(request.getParameter("seq"));
+	int reload		= KUtil.nchkToInt(request.getParameter("reload"));
+
+	ClientDAO cDAO = new ClientDAO(db);
+	ClientUserDAO cuDAO = new ClientUserDAO(db);
+	ProjectDAO pDAO = new ProjectDAO(db);
+	PriceKindsDAO pkDAO = new PriceKindsDAO(db);
+	EstimateDAO emDAO = new EstimateDAO(db);
+	EstItemDAO eiDAO = new EstItemDAO(db);
+	ItemDAO iDAO	= new ItemDAO(db);
+
+	Estimate em = emDAO.selectOne(seq);
+	Vector vecEstItem = eiDAO.getList(seq);
+%>
+
+
+<HTML>
+<HEAD>
+<title>Hanbul System</title>
+<jsp:include page="/inc/inc_script.jsp" flush="true" />
+<script language="javascript">
+function goModify(){
+	document.location = "mod.jsp?seq=<%=seq%>&reload=<%=reload%>";
+}
+function goDelete(){
+	if( confirm("»èÁ¦ÇÏ½Ã°Ú½À´Ï±î?") ){
+		document.location = "DBD.jsp?seq=<%=seq%>&reload=<%=reload%>";
+	}
+}
+function printView(){
+	document.location = "print_view.jsp?seq=<%=seq%>&reload=<%=reload%>";
+}
+//onbeforeprint="printSetup()" onafterprint="printSetup1()"
+</script>
+</HEAD>
+
+<BODY leftmargin="0" topmargin="0">
+<table cellpadding="0" cellspacing="0" border="0" width="700">
+<form name="estimateViewForm" method="post">
+<input type="hidden" name="seq" value="<%=seq%>">
+<input type="hidden" name="reload" value="<%=reload%>">
+<!-- <tr align=center>
+	<td colspan=2>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td><IMG SRC="/images/logo_simple_color.gif" WIDTH="37" HEIGHT="35" BORDER="0" ALT="" align=absmiddle></td>
+			<td valign=middle style="line-height:35px">&nbsp;<b><FONT SIZE="4">HANBUL SYSTEM CO.,LTD.</FONT></b></td>
+		</tr>
+		</table></td>
+</tr>
+<tr height=5>
+	<td colspan=2 class="trBDotLine"><IMG SRC="/images/blank.gif" WIDTH="1" HEIGHT="1" BORDER="0" ALT=""></td>
+</tr>
+<tr>
+	<td>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td>#1001, Kuro 3rd ACE Techno Tower,</td>
+		</tr>
+		<tr>
+			<td>197-48, Kuro-Dong, Kuro-Ku,</td>
+		</tr>
+		<tr>
+			<td>Seoul, Korea</td>
+		</tr>
+		</table></td>
+	<td align=right>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td>TEL : (82-2)857-8411 ~3</td>
+		</tr>
+		<tr>
+			<td>FAX : (82-2)857-8414</td>
+		</tr>
+		<tr>
+			<td>E-mail : hanbul@hanbulsystem.co.kr</td>
+		</tr>
+		</table></td>
+</tr> -->
+<tr align=center height=40>
+	<td colspan=2 style="line-height:40px"><B><FONT SIZE="6"><U>Ì¸   îÝ   ßö</U></FONT></B></td>
+</tr>
+<tr>
+	<td>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td><B><%=KUtil.nchk(cDAO.selectOne(em.seq_client).bizName)%></B> <%=em.seq_clientUser<1?"Ïþñé":""%></td>
+		</tr>
+		<tr>
+			<td><B>Project Name: <%=pDAO.selectOne(em.seq_project).name%></B></td>
+		</tr>
+		<tr>
+			<td>Ó½ Ó× íº : <%=KUtil.nchk(cuDAO.selectOne(em.seq_clientUser).userName)%> <%=em.seq_clientUser>0?"Ïþñé":""%></td>
+		</tr>
+		</table></td>
+	<td align=right>
+		<table cellpadding="0" cellspacing="0" border="0" width="150">
+		<tr>
+			<td>DATE : <%=KUtil.toDateViewMode(em.wDate)%><br>
+				°ßÀû¼­ NO. : 
+<%=KUtil.cutIntDate(em.estYear,2,4,2)%><%=KUtil.formatDigit(em.estNum)%><%=em.estNumIncre>0?"-"+em.estNumIncre:""%></td>
+		</tr>
+		</table></td>
+</tr>
+<tr>
+	<td colspan=2>&nbsp;</td>
+</tr>
+<tr>
+	<td>
+		<table cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td>Ò¡    Ðñ : Û¡ñ¬ý­ <%=NumUtil.numToFmt(em.limitDate,"##.#","0")%> °³¿ù</td>
+		</tr>
+		<tr>
+			<td>ìÚÔ¤íÞá¶ : <%=KUtil.nchk(em.place)%></td>
+		</tr>
+		<tr>
+			<td>ò¨ÝÙðÉËì : <%=KUtil.nchk(em.payKinds)%></td>
+		</tr>
+		<tr>
+			<td>Ì¸îÝ êóüùÑ¢Êà : <%=KUtil.intToCom(em.edDate)%> ÀÏ</td>
+		</tr>
+		</table></td>
+	<td align=right>
+		<table cellpadding="0" cellspacing="0" border="0" width="200">
+		<tr>
+			<td><B><FONT SIZE="4">ùÛÝÖ½Ã½ºÅÛ ÁÖ½ÄÈ¸»ç</FONT></B></td>
+		</tr>
+		<tr>
+			<td><B>HANBUL SYSTEM CO.,LTD.</B></td>
+		</tr>
+		<tr>
+			<td>ÁÖ¼Ò : ¼­¿ï½Ã ±¸·Î±¸ ±¸·Îµ¿ 197-48</td>
+		</tr>
+		<tr>
+			<td>TEL : (02)857-8411~3</td>
+		</tr>
+		<tr>
+			<td>FAX : (02)857-8414</td>
+		</tr>
+		</table></td>
+</tr>
+<tr>
+	<td colspan=2>&nbsp;</td>
+</tr>
+<tr>
+	<td colspan=2>¾Æ·¡¿Í °°ÀÌ Ì¸îÝÇÕ´Ï´Ù <%=KUtil.nchk(em.isUnit).equals("°³º°°ßÀû")?"(°³º°°ßÀû)":""%></td>
+</tr>
+<tr <%=KUtil.nchk(em.isUnit).equals("°³º°°ßÀû")?"style='display:none'":""%>>
+	<td colspan=2>ùê  Íª : 
+		ÀÏ±Ý <%=NumUtil.strToKor(em.totPrice,"")%> ¿øÁ¤
+		( <%=em.priceKinds%> <%=NumUtil.numToFmt(em.totPrice,"###,###.##","0")%> ) <%=KUtil.nchk(em.isUnit)%></td>
+</tr>
+<tr>
+	<td colspan=2>
+		<table cellpadding="0" cellspacing="1" border="0" width="100%" height="200">
+		<tr align=center class="title_bg" height=28>
+			<td width="200">ù¡ Ù£</td>
+			<td width="200">Ð® Ì«</td>
+			<td width="90">â¦ Õá</td>
+			<td width="100">Ó¤ Ê¤</td>
+			<td width="110">ÐÝ äþ</td>
+		</tr>
+		<tr height=28 class="r_bg">
+			<td colspan=5>&nbsp;<%=em.title%></td>
+		</tr>
+	<%	double reTotPrice = 0;
+		for( int i=0 ; i<vecEstItem.size() ; i++ ){	
+			EstItem ei = (EstItem)vecEstItem.get(i);
+				reTotPrice += ei.totPrice;
+	%>
+		<tr align=center class="r_bg" height=28>
+			<td><div><%=KUtil.nchk(ei.itemName)%></div></td>
+			<td></div><%=KUtil.nchk(ei.itemDim)%><div></td>
+			<td><%=KUtil.intToCom(ei.cnt)%> <%=KUtil.nchk(ei.itemUnit)%></td>
+			<td><%=ei.unitPrice>0?em.priceKinds+" "+NumUtil.numToFmt(ei.unitPrice,"###,###.##","0"):"&nbsp;"%></td>
+			<td><%=em.priceKinds%> <%=NumUtil.numToFmt(ei.totPrice,"###,###.##","0")%></td>
+		</tr>
+		<tr align=center height=30 class="bgc1">
+			<td colspan=5>
+				<%	if(KUtil.nchk(ei.itemNameMemo).length()>0){	%>
+					<div><%=KUtil.toTextMode(ei.itemNameMemo)%></div>
+				<%	}	%>
+				<%	if(KUtil.nchk(ei.itemDimMemo).length()>0){	%>
+					<div><%=KUtil.toTextMode(ei.itemDimMemo)%></div>
+				<%	}	%></td>
+		</tr>
+	<%	}//for					%>
+		<tr class="r_bg" align=center valign=top>
+			<td>&nbsp;</td>
+			<td>- ÀÌ ÇÏ ¿© ¹é -</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		</table>
+		
+		
+		<table cellpadding="0" cellspacing="1" border="0" width="100%">
+		<tr align=center height=25>
+			<td width="200" class="title_bg">ÍêÐåÊ¤äþ</td>
+			<td width="390" class="r_bg">&nbsp;</td>
+			<td width="110" class="title_bg"><%=em.priceKinds%> <%=NumUtil.numToFmt(new Double(reTotPrice),"###,###.##","0")%></td>
+		</tr>
+		<tr align=center height=25>
+			<td class="title_bg">Ý¾Ê¥Ê¤ö·áª</td>
+			<td class="r_bg" align=left>&nbsp;</td>
+			<td class="title_bg">
+			<%	if( em.taxPrice<1 ){
+					out.print("Ü¬ Ô²");
+				}else{
+					out.print(em.priceKinds); out.print(NumUtil.numToFmt(em.taxPrice,"###,###.##","0"));
+				}
+			%></td>
+		</tr>
+		<tr align=center height=25>
+			<td class="title_bg">ùê Íª</td>
+			<td class="r_bg">&nbsp;</td>
+			<td class="title_bg"><%=em.priceKinds%> <%=NumUtil.numToFmt(reTotPrice+em.taxPrice,"###,###.##","0")%></td>
+		</tr>
+		</table></td>
+</tr>
+<tr height=25>
+	<td colspan=2>¡Ø ÷åÑÀÞÀú£</td>
+</tr>
+<tr>
+	<td colspan=2 style="padding:5 5 5 5"><%=KUtil.nchk(em.memo)%></td>
+</tr>
+
+<tr align=center id="noprint" style="display:block">
+	<td colspan=2>
+		<input type="button" value="Ã¢´Ý±â" onclick="self.close();">
+		<input type="button" value="ÇÁ¸°Æ®" onclick="printView();">
+		<input type="button" value="¼öÁ¤" onclick="goModify()">
+	<%	if( ui.grade > 89 ){%>
+		<input type="button" value="»èÁ¦" onclick="goDelete()">
+	<%	}	%></td>
+</tr>
+
+</form>
+</table>
+
+
+</BODY>
+</HTML>
+
+
+<%
+
+}catch(Exception e){
+	out.print(e.toString());
+}finally{
+	db.closeAll();
+}
+%>

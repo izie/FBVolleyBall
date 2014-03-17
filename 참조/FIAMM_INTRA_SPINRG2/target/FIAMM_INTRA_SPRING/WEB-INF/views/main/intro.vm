@@ -1,0 +1,114 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : intro.vm
+  -- PGM 내용 : 메인 로그인 화면
+  -- 개발자  	 :  장익환
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+## 필수 설정 인클루드
+#parse("/common/inc_common.vm")
+
+## 로그인 체크
+#parse("/common/inc_loginCheck.vm")
+
+## 로그인 했을 경우 세션정보 저장
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='$!{rctx}/css/style.css' rel='stylesheet' type='text/css'>
+<title>FIAMM  KOREA INTRANET</title>
+
+## 개발  js/css 인클루드
+#parse("/common/inc_js.vm")
+
+## 페이지 jquery 인클루드
+<SCRIPT LANGUAGE="JavaScript" src="/resources/js/move.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript">
+function reload(){
+	document.location.href = "intro.jsp?pge=<%=page%>";
+}
+</SCRIPT>
+</head>
+<BODY class="body1">
+
+
+<table cellpadding="0" cellspacing="1" border="0" width="100%">
+
+<tr height=50>
+	<td style="padding-left:4">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr height="25">
+			<td class="ti1">&nbsp;▶ <A HREF="/main/board/list.jsp?code=notice">사내 공지사항</A></td>
+		</tr>
+		<tr height="80" valign=top>
+			<td><jsp:include page="/main/board/inc_list_main.jsp?code=notice" flush="true" /></td>
+		</tr>
+		</table></td>
+	<td style="padding-left:4">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr height="25">
+			<td class="ti1">&nbsp;▶ <A HREF="/main/board/list.jsp?code=free">사내 게시판</A></td>
+		</tr>
+		<tr height="80" valign=top>
+			<td><jsp:include page="/main/board/inc_list_main1.jsp?code=free" flush="true" /></td>
+		</tr>
+		</table></td>
+</tr>
+<tr>
+	<td colspan=2><hr style="color:#E3E3E3;height:1px"></td>
+</tr>
+<tr>
+	<td colspan=2><jsp:include page="/main/alert/inc_list_alert.jsp" flush="true"/></td>
+</tr>
+<tr height=20>
+	<td colspan=2></td>
+</tr>
+<tr align=center HEIGHT="10">
+	<td colspan=2><hr style="color:#E3E3E3;height:1px"></td>
+</tr>
+<tr align=center HEIGHT="100">
+	<td style="padding-left:10">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+		<tr>
+			<td width="100" align=center class="menu" onmouseover="menuOver()" onclick="document.location='/main/schdule/list.jsp';">
+				<B>($!{KUtil.getDate("yyyy.MM.dd")})<br>일정</B></td>
+			<td valign=top style="padding:0 0 0 5">
+				<jsp:include page="/main/schdule/inc_list.jsp" flush="true" /></td>
+		</tr>
+		</table></td>
+	<td style="padding-left:10">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+		<tr>
+			<td width="100" align=center class="menu" onmouseover="menuOver()" onclick="document.location='/main/memday/list.jsp';">
+				<B>($!{KUtil.getDate("yyyy.MM.dd")})<br>기념일</B></td>
+			<td valign=top style="padding:0 0 0 5">
+				<jsp:include page="/main/memday/inc_list.jsp" flush="true">
+					<jsp:param name="pge" value="<%=pge%>"/>
+				</jsp:include></td>
+		</tr>
+		</table>
+		</td>
+</tr>
+<!-- <tr align=center HEIGHT="10">
+	<td colspan=2><hr></td>
+</tr>
+<tr align=center HEIGHT="100">
+	<td style="padding-left:10" colspan=2>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+		<tr>
+			<td width="100" class="bgc1" align=center><B>($KUtil.getDate("yyyy.MM.dd"))<br><A HREF="/main/sales/list.jsp">영업</A></B></td>
+			<td valign=top style="padding:0 0 0 5"><jsp:include page="/main/sales/inc_list.jsp" flush="true" /></td>
+		</tr>
+		</table></td>
+</tr> -->
+<tr align=center HEIGHT="10">
+	<td colspan=2><hr style="color:#E3E3E3;height:1px"></td>
+</tr>
+<tr>
+	<td colspan=2>&nbsp;</td>
+</tr>
+
+</table>
+</html>

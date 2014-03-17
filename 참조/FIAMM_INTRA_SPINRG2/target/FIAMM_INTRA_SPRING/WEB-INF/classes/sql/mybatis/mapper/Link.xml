@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.LinkMapper"> 
+ <!-- ('%', #{st}, '%') -->
+ <select id="getList" parameterType="map" resultType="Link">
+ 	   SELECT * FROM link WHERE seq_po=#{seq_po} ORDER BY seq_po desc  
+ </select>
+ 
+ <select id="getListContractNo" parameterType="map" resultType="Link">
+ 	   SELECT * FROM link WHERE seq_po=#{seq_po} ORDER BY seq_po desc  
+ </select>
+ 
+  <select id="getList2" parameterType="Link" resultType="Link">
+ 	    SELECT * FROM link WHERE seq!= 0 
+ 	    <if test="@Ognl@isNotEmpty(seq_contract) and seq_contract > 0">
+ 	     	AND seq_contract=#{seq_contract} ORDER BY seq_contract DESC, seq DESC 
+ 	    </if>
+ 	    
+ 	    <if test="@Ognl@isNotEmpty(seq_po) and seq_po > 0">
+ 	    	 AND seq_po=#{seq_po} ORDER BY seq_po DESC, seq DESC 
+ 	    </if>
+ 	    
+ 	    <if test="@Ognl@isNotEmpty(seq_project) and seq_project > 0">
+ 	     	AND seq_project=#{seq_project} ORDER BY seq_project DESC, seq DESC 
+ 	    </if>
+ </select>
+ 
+ <select id="getList3" parameterType="map" resultType="Link">
+ 	     SELECT * FROM link WHERE seq != 0 
+ 	    <if test="@Ognl@isNotEmpty(seq_contract)">
+ 	    	<choose>
+ 	    		<when test="seq_contract > 0">
+ 	    			 AND seq_contract=#{seq_contract} 
+ 	    		</when>
+ 	    		<when test="seq_contract == -1">
+ 	    			  AND seq_contract != 0 
+ 	    		</when>
+ 	    		<when test="seq_contract == -2">
+ 	    			  AND seq_contract == 0 
+ 	    		</when>
+ 	    	</choose>
+ 	    </if>
+ 	    <if test="@Ognl@isNotEmpty(seq_po)">
+ 	    	<choose>
+ 	    		<when test="seq_po > 0">
+ 	    			 AND seq_po=#{seq_po} 
+ 	    		</when>
+ 	    		<when test="seq_po == -1">
+ 	    			  AND seq_po != 0 
+ 	    		</when>
+ 	    		<when test="seq_po == -2">
+ 	    			  AND seq_po == 0 
+ 	    		</when>
+ 	    	</choose>
+ 	    </if>
+ 	    <if test="@Ognl@isNotEmpty(seq_project)">
+ 	    	<choose>
+ 	    		<when test="seq_project > 0">
+ 	    			 AND seq_project=#{seq_project} 
+ 	    		</when>
+ 	    		<when test="seq_project == -1">
+ 	    			  AND seq_project != 0 
+ 	    		</when>
+ 	    		<when test="seq_project == -2">
+ 	    			  AND seq_project == 0 
+ 	    		</when>
+ 	    	</choose>
+ 	    </if>
+		ORDER BY seq DESC
+ </select>
+ 
+ <select id="getListCnt3" parameterType="map" resultType="int">
+ 	     SELECT COUNT(seq) FROM link WHERE seq != 0
+ 	    <if test="@Ognl@isNotEmpty(seq_contract)">
+ 	    	<choose>
+ 	    		<when test="seq_contract > 0">
+ 	    			 AND seq_contract=#{seq_contract} 
+ 	    		</when>
+ 	    		<when test="seq_contract == -1">
+ 	    			  AND seq_contract != 0 
+ 	    		</when>
+ 	    		<when test="seq_contract == -2">
+ 	    			  AND seq_contract == 0 
+ 	    		</when>
+ 	    	</choose>
+ 	    </if>
+ 	    <if test="@Ognl@isNotEmpty(seq_po)">
+ 	    	<choose>
+ 	    		<when test="seq_po > 0">
+ 	    			 AND seq_po=#{seq_po} 
+ 	    		</when>
+ 	    		<when test="seq_po == -1">
+ 	    			  AND seq_po != 0 
+ 	    		</when>
+ 	    		<when test="seq_po == -2">
+ 	    			  AND seq_po == 0 
+ 	    		</when>
+ 	    	</choose>
+ 	    </if>
+ 	    <if test="@Ognl@isNotEmpty(seq_project)">
+ 	    	<choose>
+ 	    		<when test="seq_project > 0">
+ 	    			 AND seq_project=#{seq_project} 
+ 	    		</when>
+ 	    		<when test="seq_project == -1">
+ 	    			  AND seq_project != 0 
+ 	    		</when>
+ 	    		<when test="seq_project == -2">
+ 	    			  AND seq_project == 0 
+ 	    		</when>
+ 	    	</choose>
+ 	    </if>
+ </select>
+ 
+ <select id="getListProj" parameterType="map" resultType="Link">
+ 	   SELECT * FROM link WHERE seq!= 0
+ 	    AND seq_project=#{seq_project} ORDER BY seq_project DESC, seq DESC   
+ </select>
+ 
+  <select id="getListPo" parameterType="map" resultType="int">
+ 	   SELECT distinct(seq_po) FROM link WHERE seq != 0 
+ 	     AND seq_project=#{seq_project} ORDER BY seq DESC    
+ </select>
+ 
+ <select id="getListCon" parameterType="map" resultType="int">
+ 	   SELECT distinct(seq_contract) FROM link WHERE seq != 0
+			AND seq_po=#{seq_po} ORDER BY seq DESC   
+ </select>
+ 
+ <select id="getListCon" parameterType="map" resultType="Link">
+ 	   SELECT * FROM link WHERE seq_po=#{seq_po}
+ </select>
+ 
+ <select id="getListSeq" parameterType="map" resultType="hashmap">
+		SELECT seq FROM link WHERE seq_project=#{seq_project} AND seq_po=#{seq_po} AND  (seq_contract=#{seq_contract} OR seq_contract=0) 
+ </select>
+ 
+  <insert id="insert" parameterType="Link">
+   INSERT INTO link(
+   	seq_project,
+   	seq_contract,
+   	seq_po
+   ) VALUES(
+   	?,?,?) 
+	
+ </insert>
+ <select id="selectOne" parameterType="map" resultType="Link">
+ 	SELECT * FROM link WHERE seq_po=#{seq_po}
+ </select>
+ <insert id="insert" parameterType="Link">
+ 	 INSERT INTO link(seq_project,seq_contract,seq_po) VALUES(#{seq_project},#{seq_contract},#{seq_po})
+ </insert>
+ <delete id="deleteForLink" parameterType="map">
+ 	 DELETE FROM link WHERE seq=#{seq}
+ </delete>
+ 
+ <select id="selectForLink" parameterType="Link" resultType="Entity">
+ 	 SELECT seq FROM link WHERE seq_project=#{seq_project} AND seq_po=#{seq_po} AND  (seq_contract=#{seq_contract} OR seq_contract=0)
+ </select>
+ 
+ <select id="select" parameterType="map" resultType="Link">
+ 	  SELECT * FROM link WHERE seq=#{seq}
+ </select>
+ 
+</mapper>

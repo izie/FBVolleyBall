@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+ "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+ "http://tiles.apache.org/dtds/tiles-config_2.1.dtd">
+ 
+<tiles-definitions>
+
+	<definition name="content_layout" templateExpression="/WEB-INF/views/${skin}/template/content_layout.jsp">
+	 <put-attribute name="header" expression="/WEB-INF/views/${skin}/template/header.jsp" />
+	 <put-attribute name="footer" expression="/WEB-INF/views/${skin}/template/footer.jsp" />
+	 <put-attribute name="left" expression="/WEB-INF/views/${skin}/template/left.jsp" />
+	 <put-attribute name="body" expression="/WEB-INF/views/${skin}/template/body.jsp" />
+	</definition>
+	
+	<definition name="etc_layout" templateExpression="/WEB-INF/views/${skin}/template/etc_layout.jsp">
+	 <put-attribute name="body" expression="/WEB-INF/views/${skin}/template/body.jsp" />
+	 <put-attribute name="footer" expression="/WEB-INF/views/${skin}/template/footer.jsp" />
+	</definition>
+	
+	<definition name="login" extends="etc_layout">
+	 <put-attribute name="title" value="로그인 화면" />
+	 <put-attribute name="body" expression="/WEB-INF/views/${skin}/login.jsp" />
+	</definition>
+	
+	<definition name="*" extends="content_layout">
+	 <put-attribute name="title" value="컨텐트 화면" />
+	 <put-attribute name="body" expression="/WEB-INF/views/${skin}/{1}.jsp" />
+	</definition>
+
+</tiles-definitions>

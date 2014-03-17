@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="true" />
+        <setting name="lazyLoadingEnabled" value="true" />
+        <setting name="multipleResultSetsEnabled" value="true" />
+        <setting name="useColumnLabel" value="true" />
+        <setting name="useGeneratedKeys" value="false" />
+        <setting name="defaultStatementTimeout" value="25000" />
+    </settings>
+	<!--  Type Aliase -->
+	<!--<typeAliases>
+		<typeAlias alias="User" type="com.izect.fiamm.domain.User" />
+		<typeAlias alias="Project" type="com.izect.fiamm.domain.Project" />
+</typeAliases>-->
+	<!--  Mapping -->
+<!--  -->
+<!--     <typeAliases /> -->
+
+<!-- 상위 mybatis.xml 에서 mapperLocations 설정 시 하위 설정은 필요 없음  -->
+<!-- mybatis 에서 작성한 SQL 문이 정의된 파일 지정 -->
+<!-- Using classpath relative resources : <mapper resource="sql/com.proto.board.List.xml" /> -->
+<!--     <mappers /> -->
+</configuration>

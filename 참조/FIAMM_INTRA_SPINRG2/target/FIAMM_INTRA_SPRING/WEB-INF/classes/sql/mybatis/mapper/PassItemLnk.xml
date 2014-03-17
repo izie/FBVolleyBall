@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izect.fiamm.mapper.PassItemLnk">
+	<insert id="insert" parameterType="map">
+		INSERT INTO passitemlnk(seq_po,seq_setupitem,seq_contract,place)
+		VALUES(#{seq_po},#{seq_setupitem},#{seq_contract},#{place})
+	</insert>
+	<select id="getList" parameterType="map" resultType="PassItemLnk">
+		SELECT * FROM passitemlnk WHERE seq_po=#{seq_po} order by seq
+	</select>
+
+	<select id="selectOne" parameterType="map" resultType="PassItemLnk">
+		SELECT * FROM passitemlnk WHERE seq=#{seq}
+	</select>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM passitemlnk WHERE seq=#{seq}
+	</delete>
+
+	<update id="update" parameterType="PassItemLnk">
+		UPDATE 
+			passitemlnk 
+		SET 
+			passTrans=#{passTrans},
+			passKinds=#{passKinds},
+			passKinds1=#{passKinds1},
+			isDropGuar=#{isDropGuar},
+			shippingDocRecDate=#{shippingDocRecDate} ,
+			shippingDocSendDate=#{shippingDocSendDate},
+			memo=#{memo},
+			wDate=#{wDate},
+			setupDate=#{setupDate},
+			takeOutDate=#{takeOutDate} ,
+			deliDate=#{deliDate} ,
+			place=#{place},
+			currDate=#{currDate},
+			isUse=#{isUse},
+			currDateMemo=#{currDateMemo} 
+		WHERE 
+			seq=#{seq}
+	</update>
+
+	<select id="poCntSameChk" parameterType="map" resultType="int">
+		SELECT COUNT(seq) FROM passitemlnk WHERE (passTrans is null OR passTrans='') AND seq_po=#{seq_po}
+	</select>
+
+	<update id="update2" parameterType="map">
+		UPDATE passitemlnk SET seq_contract=#{seq_contract} WHERE seq=#{seq_pil}
+	</update>
+	
+	<update id="update3" parameterType="map">
+		UPDATE passitemlnk SET ${passCode}=#{passDate} WHERE seq=#{ps.seq_passitemlnk}
+	</update>
+	
+	<select id="getCntPo" parameterType="map" resultType="int">
+		 SELECT COUNT(seq) FROM passitemlnk WHERE seq_po=#{seq_po}
+	</select>
+
+</mapper>

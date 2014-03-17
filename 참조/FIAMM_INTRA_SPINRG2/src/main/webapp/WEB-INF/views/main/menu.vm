@@ -1,0 +1,83 @@
+#*-- ---------- ---------------------------------------------------------
+  -- PGM 이름 : main.vm
+  -- PGM 내용 : 메인 화면
+  -- 개발자  
+  -- ---------- ---------- -------- ------------------------------------- --*#
+
+## 필수 설정 인클루드
+#parse("/common/inc_common.vm")
+
+## 로그인 했을 경우 세션정보 저장
+#set ($sessionObj = $session.getAttribute("FIAMM_SESSION_USER"))
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='$!{rctx}/css/common.css' rel='stylesheet' type='text/css'>
+<title>FIAMM  KOREA INTRANET</title>
+
+## 개발  js/css 인클루드
+#parse("/common/inc_js.vm")
+
+## 페이지 jquery 인클루드
+<SCRIPT LANGUAGE="JavaScript">
+function F5keydown(){
+	if(event.keyCode== 116) {
+	  window.event.keyCode = "";
+	  parent.document.frames['MF'].location.reload();
+	  return false;
+	}
+}
+document.onkeydown=F5keydown;
+</SCRIPT>
+<style type="text/css">
+body{
+	font-family : 굴림;
+	font-size:9pt;
+	color:#4B4B4B;
+	margin : 0px 0px 0px 0px;
+}
+.tab_right_top{
+		position : absolute;
+		right:0px;
+		top:0px;
+		z-index : 5;
+}
+.tsrule_right_bottom{
+		position : absolute;
+		right:0px;
+		bottom:-1px;
+		z-index:5;
+}
+.tree{
+	border-right : 1px solid #AEAEAE;
+}
+.tsrule_right{
+			width:3px;
+			background-color : #E6E6E6;
+			border-left : 1px solid #F5F5F5;
+}
+</style>
+</head>
+
+<body>
+
+<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="tree">
+		<iframe name="category" src="/Main/menuImg" height="100%" width="100%" frameborder=0 border=0 scrolling="auto"></iframe></td>
+	<td valign="top" class="tsrule_right"><img src="/images/1x1.gif"></td>   
+  </tr>
+</table>
+
+	<img src="/resources/images/left_zoom.gif" border="0" usemap="#Map" class="tab_right_top"> 
+	<map name="Map">
+	<area shape="rect" coords="7,4,23,19" href="javascript:leftFrameZoom()" style="cursor:hand">
+	<area shape="rect" coords="6,23,21,39" href="javascript:rightFrameZoom()" style="cursor:hand">
+	<area shape="rect" coords="6,42,22,59" href="javascript:defaultFrameZoom()" style="cursor:hand">
+	</map>
+	<img src="/resources/images/left_bottom.gif" class="tsrule_right_bottom"> 
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.izect.fiamm.mapper.PassMapper">
+	<select id="getList" parameterType="map" resultType="Pass">
+		SELECT *
+		FROM pass WHERE seq_passitemlnk=#{seq_passitemlnk} AND
+		passCode=#{passCode} ORDER BY seq DESC
+	</select>
+
+	<select id="getCnt" parameterType="map" resultType="int">
+		SELECT
+		COUNT(seq) FROM pass WHERE seq_passitemlnk=#{seq_passitemlnk}
+	</select>
+
+	<insert id="insert" parameterType="Lc">
+		INSERT INTO
+		pass(seq,seq_po,seq_passitemlnk,passCode,passDate,memo)
+		VALUES(#{seq},#{seq_po},#{seq_passitemlnk},#{passCode},#{passDate},#{memo})
+	</insert>
+
+	<delete id="delete" parameterType="map">
+		DELETE FROM pass WHERE seq=#{seq}
+	</delete>
+
+
+	<select id="selectSeq" parameterType="map" resultType="Entity">
+		SELECT seq
+		FROM pass WHERE seq_po=#{seq_po}
+	</select>
+
+	<select id="selectSeq2" parameterType="map" resultType="Entity">
+		SELECT seq FROM pass WHERE seq_passitemlnk=#{seq_passitemlnk}
+	</select>
+
+	<select id="selectOne" parameterType="map" resultType="Pass">
+		SELECT *
+		FROM pass WHERE seq=#{seq}
+	</select>
+
+	<select id="selectLastOne" parameterType="map" resultType="Pass">
+		SELECT * FROM pass WHERE seq_passitemlnk=#{seq_passitemlnk} AND
+		passCode=#{passCode} ORDER BY seq DESC LIMIT 0,1
+	</select>
+
+	<update id="update" parameterType="Lc">
+		 UPDATE pass SET passCode=#{passCode},passDate=#{passDate},memo=#{memo} WHERE seq=#{seq}
+	</update>
+
+
+
+
+</mapper>

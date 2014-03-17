@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+ namespace="com.izect.fiamm.mapper.UserInfoMapper"> 
+ <select id="selectUserOne" parameterType="String" resultType="User">
+ 	SELECT
+ 		userId,
+		passwd,
+		grade,
+		userName,
+		sn,
+		joinDate,
+		work,
+		tel,
+		inTel,
+		hp,
+		homeTel,
+		email,
+		nowPosi,
+		family,
+		postNum,
+		addr,
+		detailAddr,
+		etc,
+		pic,
+		lastConnDate,
+		authIp,
+		smsKey,
+		smsKeyDate,
+		errCnt,
+		partName,
+		classPosi,
+		yearSalary,
+		stamp,
+		permission,
+		isadmin
+	FROM
+		userinfo
+	WHERE
+		userId = #{userId}
+ </select>
+ <select id="idPassChk" parameterType="String" resultType="int">
+ 	SELECT
+ 		COUNT(*)
+	FROM
+		userinfo
+	WHERE
+		userId = #{userId}
+		AND passwd = #{passwd}
+ </select>
+ <update id="passwdFail" parameterType="String">
+ 	UPDATE 
+ 		userinfo 
+ 	SET 
+ 		errCnt = errCnt + 1 
+ 	WHERE 
+ 		userId = #{userId}
+ </update>
+ 
+ <update id="initFail" parameterType="String">
+ 	UPDATE 
+ 		userinfo 
+ 	SET 
+ 		lastConnDate = NOW(),
+ 		errCnt = 0
+ 	WHERE 
+ 		userId = #{userId}
+ </update>
+ 
+ 
+</mapper>
